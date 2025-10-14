@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import MainNav from "../components/MainNav";
 import CalendarGrid from "../components/CaregiverCal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import DailySidebar from "../components/DailySidebar";
 
 function PatientDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [sidebarOpen, setSideBarOpen] = useState(false);
   const [taskStates, setTaskStates] = useState({});
 
@@ -180,18 +181,32 @@ function PatientDashboard() {
     );
   };
 
+  const getShiftsForDate = (date) => {
+    if (!date) return [];
+    const dateKey = formatDateKey(date.getFullYear(), date.getMonth(), date.getDate());
+    return shifts[dateKey] || [];
+  };
+
+  const toggleTask = (type, id) => {
+    const key = `${type}-${id}`;
+    setTaskStates(prev => ({
+        ...prev,
+        [key]: !prev[key]
+    }));
+  };
+
   return (
     <>
       <MainNav />
 
       <main className="ring-border mx-auto min-h-screen w-full max-w-7xl pt-30 ring-1 ring-offset-0">
-        <div className="flex gap-6 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="flex w-full gap-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg">
           <div
             className={`flex-1 transition-all duration-300 ${sidebarOpen ? "mr-0" : ""}`}
           >
             <div className="bd-white rounded-xl p-6 shadow-lg">
               <div className="mb-6 flex items-center justify-between">
-                <h2>{formatDate(currentDate)}</h2>
+                <div className="text-lg">{formatDate(currentDate)}</div>
                 <div className="flex space-x-2">
                   <button
                     onClick={getPreviousMonth}
@@ -216,6 +231,17 @@ function PatientDashboard() {
             </div>
           </div>
           {/* Sidebar component will go here */}
+          {sidebarOpen && (
+            <DailySidebar
+            selectedDate={selectedDate}
+            onClose={() => setSideBarOpen(false)}
+            shifts={getShiftsForDate(selectedDate)}
+            medications={medications}
+            adls={adls}
+            taskStates={taskStates}
+            onToggleTask={toggleTask}
+            />
+          )}
         </div>
       </main>
     </>
