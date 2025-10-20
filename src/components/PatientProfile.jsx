@@ -1,13 +1,13 @@
 function PatientProfile({ patient }) {
   return (
     <>
-      <div className="flex h-60 w-full bg-white">
+      <div className="flex h-64 w-full bg-white py-20">
         <div className="flex items-center justify-start space-x-6 p-8 ml-4">
           <div className="relative">
             <img
-              src={patient.imgUrl}
+              src={patient.imgUrl || './src/assets/images/example_profilepic.png'}
               alt={patient.name}
-              className="h-24 w-24 rounded-full border-4 border-indigo-100 object-cover"
+              className="h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-indigo-100 object-cover"
             />
           </div>
           <div className="flex-1">

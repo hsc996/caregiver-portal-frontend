@@ -135,7 +135,7 @@ function PatientDashboard() {
   ];
 
   const patient = {
-    name: 'Margaret Thompson',
+    name: 'Harold Thompson',
     imageUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Margaret',
     dob: 'March 15, 1945',
     allergies: 'Penicillin, Shellfish',
@@ -209,8 +209,8 @@ function PatientDashboard() {
       <MainNav />
 
       <main className="ring-border mx-auto min-h-screen w-full max-w-7xl pt-30 ring-1 ring-offset-0">
+        <PatientProfile patient={patient}/>
         <div className="flex w-full">
-          <PatientProfile patient={patient}/>
         </div>
         <div className="flex w-full gap-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg">
           <div
