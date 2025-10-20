@@ -3,6 +3,7 @@ import MainNav from "../components/MainNav";
 import CalendarGrid from "../components/CaregiverCal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import DailySidebar from "../components/DailySidebar";
+import PatientProfile from "../components/PatientProfile";
 
 function PatientDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -133,6 +134,14 @@ function PatientDashboard() {
     },
   ];
 
+  const patient = {
+    name: 'Margaret Thompson',
+    imageUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Margaret',
+    dob: 'March 15, 1945',
+    allergies: 'Penicillin, Shellfish',
+    carers: ['Sarah Johnson, Mike Chen, Emma Davis']
+  };
+
   const formatDateKey = (year, month, date) => {
     return `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
   };
@@ -200,6 +209,9 @@ function PatientDashboard() {
       <MainNav />
 
       <main className="ring-border mx-auto min-h-screen w-full max-w-7xl pt-30 ring-1 ring-offset-0">
+        <div className="flex w-full">
+          <PatientProfile patient={patient}/>
+        </div>
         <div className="flex w-full gap-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg">
           <div
             className={`flex-1 transition-all duration-300 ${sidebarOpen ? "mr-0" : ""}`}
