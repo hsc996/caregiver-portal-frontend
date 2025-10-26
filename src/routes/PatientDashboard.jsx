@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import MainNav from "../components/MainNav";
-import CalendarGrid from "../components/CaregiverCal";
+import CalendarGrid from "../components/Dashboard/CaregiverCal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import DailySidebar from "../components/DailySidebar";
-import PatientProfile from "../components/PatientProfile";
+import DailySidebar from "../components/Dashboard/DailySidebar";
+import PatientProfile from "../components/Dashboard/PatientProfile";
+import HandoverNotes from "../components/Dashboard/HandoverNotes";
 
 function PatientDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());

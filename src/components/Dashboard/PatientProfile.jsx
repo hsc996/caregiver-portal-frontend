@@ -1,8 +1,8 @@
 function PatientProfile({ patient }) {
   return (
     <>
-      <div className="flex h-64 w-full bg-white py-20">
-        <div className="flex items-center justify-start space-x-6 p-8 ml-4">
+      <div className="flex w-full bg-white py-4">
+        <div className="flex items-center justify-start space-x-6 p-8 ml-6">
           <div className="relative">
             <img
               src={patient.imgUrl || './src/assets/images/example_profilepic.png'}
