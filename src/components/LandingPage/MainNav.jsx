@@ -8,13 +8,13 @@ function MainNav() {
         <div className="z-51 h-20 w-full max-w-7xl px-6 backdrop-blur-[6px]">
           <div className="flex h-full justify-between">
             <div className="flex items-center space-x-3">
-              <Link to="/signin" className="flex items-center space-x-3">
+              <Link to="/login" className="flex items-center space-x-3">
                 <Calendar className="h-7 w-7 text-indigo-600"/>
                 <h1 className="text-2xl text-indigo-600">CareSync</h1>
               </Link>
             </div>
             <div className="flex h-full items-center gap-3">
-              <Link to="/signin">
+              <Link to="/login">
                 <button className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors">
                     Login
                 </button>

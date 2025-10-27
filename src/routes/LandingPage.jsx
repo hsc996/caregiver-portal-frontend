@@ -1,9 +1,11 @@
 import MainNav from "../components/LandingPage/MainNav";
+import HeroSection from "../components/LandingPage/HeroSection";
 
 function LandingPage(){
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="min-h-screen">
             <MainNav />
+            <HeroSection />
         </div>
     )
 }
