@@ -4,7 +4,6 @@ import CalendarGrid from "../components/Dashboard/CaregiverCal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import DailySidebar from "../components/Dashboard/DailySidebar";
 import PatientProfile from "../components/Dashboard/PatientProfile";
-import HandoverNotes from "../components/Dashboard/HandoverNotes";
 
 function PatientDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date());
