@@ -44,7 +44,7 @@ function RegisterPage(){
             );
             setUserJwt(result.token);
             localStorage.setItem('refreshToken', result.refreshToken);
-            navigate('/');
+            navigate('/dashboard');
         } catch (error) {
             setError(error.response?.data?.message || 'Sign up failed');
         } finally {

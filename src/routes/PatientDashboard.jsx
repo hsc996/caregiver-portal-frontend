@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MainNav from "../components/MainNav";
+import MainNav from "../components/LandingPage/MainNav";
 import CalendarGrid from "../components/Dashboard/CaregiverCal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import DailySidebar from "../components/Dashboard/DailySidebar";

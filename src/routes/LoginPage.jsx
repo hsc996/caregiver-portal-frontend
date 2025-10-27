@@ -22,7 +22,7 @@ function LoginPage(){
             const result = await authAPI.signin(email, password);
             setUserJwt(result.token);
             localStorage.setItem('refreshToken', result.refreshToken);
-            navigate('/');
+            navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error.response?.data);
             setError(error.response?.data?.message || "Sign in failed.");
