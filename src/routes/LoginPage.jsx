@@ -3,19 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 import { authAPI } from '../api/auth';
 import { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent} from '../components/ui/Card';
+import { useNotificationService } from '../components/Notifications/notificationService';
 
 function LoginPage(){
     const [, setUserJwt] = useUserAuthContext();
     const navigate = useNavigate();
+    const { sendErrorNotification } = useNotificationService();
 
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         setLoading(true);
 
         try {
@@ -24,8 +24,7 @@ function LoginPage(){
             localStorage.setItem('refreshToken', result.refreshToken);
             navigate('/dashboard');
         } catch (error) {
-            console.error('Login error:', error.response?.data);
-            setError(error.response?.data?.message || "Sign in failed.");
+            sendErrorNotification(error.response?.data?.message || "Sign in failed.");
         } finally {
             setLoading(false);
         }
@@ -68,13 +67,6 @@ function LoginPage(){
                             placeholder="Enter password"
                             />
                         </div>
-
-                        {/* Error message */}
-                        {error && (
-                            <div className="bg-destructive/15 text-destructive text-sm px-4 py-3 rounded-md">
-                                {error}
-                            </div>
-                        )}
 
                         {/* Forgot password link */}
                         <div className="text-right">

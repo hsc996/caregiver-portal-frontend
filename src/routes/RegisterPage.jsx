@@ -3,12 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/Card';
 import { authAPI } from '../api/auth';
+import { useNotificationService } from '../components/Notifications/notificationService';
 
 function RegisterPage(){
     const [, setUserJwt] = useUserAuthContext();
     const navigate = useNavigate();
+    const { sendErrorNotification } = useNotificationService();
 
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -22,15 +23,13 @@ function RegisterPage(){
             ...formData,
             [e.target.id]: e.target.value
         });
-        setError('');
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
 
         if (formData.password !== formData.confirmPassword){
-            setError("Passwords do not match.");
+            sendErrorNotification("Passwords do not match.");
             return;
         }
 
@@ -46,7 +45,7 @@ function RegisterPage(){
             localStorage.setItem('refreshToken', result.refreshToken);
             navigate('/dashboard');
         } catch (error) {
-            setError(error.response?.data?.message || 'Sign up failed');
+            sendErrorNotification(error.response?.data?.message || 'Sign up failed');
         } finally {
             setLoading(false);
         }
@@ -117,13 +116,6 @@ function RegisterPage(){
                             placeholder="Confirm password"
                             />
                         </div>
-
-                        {/* Error message */}
-                        {error && (
-                            <div className="bg-destructive/15 text-destructive text-sm px-4 py-3 rounded-md">
-                                {error}
-                            </div>
-                        )}
 
                         <button
                         type="submit"
