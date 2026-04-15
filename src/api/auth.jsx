@@ -8,7 +8,6 @@ export const authAPI = {
 
         return response.data;
     },
-
     signin: async (email, password) => {
         const response = await api.post('/auth/signin', {
             email, password
@@ -16,7 +15,6 @@ export const authAPI = {
 
         return response.data;
     },
-
     requestPasswordReset: async (email) => {
         const response = await api.post('/auth/forgot-password', {
             email: email.trim()
@@ -24,7 +22,6 @@ export const authAPI = {
 
         return response.data;
     },
-
     resetPassword: async (token, newPassword) => {
         const response = await api.post('/auth/reset-password', {
             token, newPassword
@@ -32,7 +29,6 @@ export const authAPI = {
 
         return response.data;
     },
-
     refreshToken: async (refreshToken) => {
         const response = await api.post('/auth/refresh', {
             refreshToken
@@ -40,7 +36,6 @@ export const authAPI = {
 
         return response.data;
     },
-
     logout: () => {
         localStorage.removeItem('userJwt');
         localStorage.removeItem('refreshToken');

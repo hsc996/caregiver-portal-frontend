@@ -27,13 +27,13 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use((response) => response, async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry){
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/')){
         originalRequest._retry = true;
         const refreshToken = localStorage.getItem('refreshToken');
 
         if (!refreshToken){
             localStorage.removeItem('userJwt');
-            window.location.href = "/login";
+            window.location.href = "/signin";
             return Promise.reject(error);
         }
 
