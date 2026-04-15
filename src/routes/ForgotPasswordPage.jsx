@@ -83,9 +83,8 @@ function ForgotPassword(){
                 </CardContent>
                 <CardFooter>
                     <p className='text-sm text-muted-foreground text-left w-full'>
-                        Back to{' '}
                         <Link to="/signin" className="text-primary hover:underline font-medium">
-                            Sign in
+                            Back to sign in
                         </Link>
                     </p>
                 </CardFooter>
