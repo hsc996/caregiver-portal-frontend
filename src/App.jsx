@@ -6,11 +6,12 @@ import RegisterPage from "./routes/RegisterPage";
 import { NotificationProvider } from "./contexts/NotificationContext/NotificationProvider";
 import ForgotPassword from "./routes/ForgotPasswordPage";
 import ResetPasswordPage from "./routes/ResetPasswordPage";
+import PatientProfile from "./components/PatientPage/PatientProfile";
 
 function App() {
   return (
     <NotificationProvider>
-      <div className='flex min-h-screen w-dvw flex-col bg-background px-0 sm:px-10'>
+      <div className='flex min-h-screen w-dvw flex-col bg-background'>
         <Routes>
           <Route path="/" element={<LandingPage />}/>
           <Route path="/dashboard" element={<PatientDashboard />}/>
@@ -18,6 +19,7 @@ function App() {
           <Route path="/signup" element={<RegisterPage />}/>
           <Route path="/forgot-password" element={<ForgotPassword />}/>
           <Route path="/reset-password" element={<ResetPasswordPage />}/>
+          <Route path="/patient/:id" element={<PatientProfile />}/>
         </Routes>
       </div>
     </NotificationProvider>

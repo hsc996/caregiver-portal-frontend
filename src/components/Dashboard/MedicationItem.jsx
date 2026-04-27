@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 
 function MedicationItem({ medication, isCompleted, onToggle }) {
   return (
