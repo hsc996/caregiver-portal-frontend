@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Camera, Check, X } from 'lucide-react';
 import MainNav from '../LandingPage/MainNav';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
@@ -28,6 +28,7 @@ const emptyContact = { name: '', relationship: '', phoneNumber: '', email: '' };
 function PatientProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const fileInputRef = useRef(null);
     const { sendSuccessNotification, sendErrorNotification } = useNotificationService();
 
@@ -53,24 +54,33 @@ function PatientProfile() {
     const [uploadComplete, setUploadComplete] = useState(false);
     const [newImgUrl, setNewImgUrl] = useState(null);
 
+    function populateForm(p) {
+        setPatient(p);
+        setForm({
+            firstName: p.firstName || '',
+            lastName: p.lastName || '',
+            dateOfBirth: toDateInputValue(p.dateOfBirth),
+            allergies: arrayToString(p.allergies),
+            alerts: arrayToString(p.alerts),
+            emergencyContacts: [
+                p.emergencyContacts?.[0] ?? { ...emptyContact },
+                p.emergencyContacts?.[1] ?? { ...emptyContact },
+            ],
+        });
+    }
+
     useEffect(() => {
+        const statePatient = location.state?.patient;
+        if (statePatient) {
+            populateForm(statePatient);
+            setLoading(false);
+            return;
+        }
+
         async function fetchPatient() {
             try {
                 const res = await patientAPI.getPatient(id);
-                const p = res.data.data;
-                setPatient(p);
-                const contacts = [
-                    p.emergencyContacts?.[0] ?? { ...emptyContact },
-                    p.emergencyContacts?.[1] ?? { ...emptyContact },
-                ];
-                setForm({
-                    firstName: p.firstName || '',
-                    lastName: p.lastName || '',
-                    dateOfBirth: toDateInputValue(p.dateOfBirth),
-                    allergies: arrayToString(p.allergies),
-                    alerts: arrayToString(p.alerts),
-                    emergencyContacts: contacts,
-                });
+                populateForm(res.data.data);
             } catch {
                 sendErrorNotification('Failed to load patient record.');
             } finally {

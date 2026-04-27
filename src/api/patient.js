@@ -15,6 +15,9 @@ export const patientAPI = {
     updatePatient: (id, data) =>
         api.patch(`/patient/${id}`, data),
 
+    getHandoverNotes: (id, date) =>
+        api.get(`/patient/${id}/handover-notes`, { params: { date } }),
+
     uploadImage: (id, file, onProgress) => {
         const formData = new FormData();
         formData.append('profileImg', file);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import MainNav from '../components/LandingPage/MainNav';
 import CalendarGrid from '../components/Dashboard/CaregiverCal';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, FileText, Tag } from 'lucide-react';
 import DailySidebar from '../components/Dashboard/DailySidebar';
 import PatientHeader from '../components/Dashboard/PatientHeader';
 import PatientSidebar from '../components/Dashboard/PatientSidebar';
@@ -37,7 +37,12 @@ function toMedications(patient) {
                 frequency: m.frequency ?? '',
                 completed: false,
             }))
-        );
+        )
+        .sort((a, b) => {
+            if (a.time === '—') return 1;
+            if (b.time === '—') return -1;
+            return a.time.localeCompare(b.time);
+        });
 }
 
 function toAdls(patient) {
@@ -53,6 +58,66 @@ function toAdls(patient) {
 const formatDateKey = (year, month, day) =>
     `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
+const toISODate = (date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+// ─── Handover note detail ─────────────────────────────────────────────────────
+
+function HandoverNoteDetail({ note, onBack }) {
+    const time = new Date(note.submittedAt).toLocaleTimeString('en-US', {
+        hour: 'numeric', minute: '2-digit', hour12: true,
+    });
+    const date = new Date(note.submittedAt).toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric',
+    });
+
+    return (
+        <div className="flex flex-col h-full">
+            <div className="mb-6 flex items-center gap-3">
+                <button
+                    onClick={onBack}
+                    className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Calendar
+                </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-5">
+                <div className="flex items-start gap-3">
+                    <div className="rounded-lg bg-indigo-50 p-2.5 shrink-0">
+                        <FileText className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900">{note.title}</h2>
+                        <p className="mt-0.5 text-sm text-gray-500">
+                            {note.caregiver} · {date} at {time}
+                        </p>
+                    </div>
+                </div>
+
+                <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+                    {note.content}
+                </p>
+
+                {note.tags?.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        {note.tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700"
+                            >
+                                <Tag className="h-3 w-3" />
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 function PatientDashboard() {
@@ -65,7 +130,10 @@ function PatientDashboard() {
     const [taskStates, setTaskStates]           = useState({});
     const [shifts, setShifts]                   = useState({});
     const [shiftsLoading, setShiftsLoading]     = useState(false);
+    const [handoverNotes, setHandoverNotes]     = useState([]);
+    const [selectedNote, setSelectedNote]       = useState(null);
 
+    // Fetch shifts per month
     useEffect(() => {
         if (!selectedPatient?._id) return;
 
@@ -90,6 +158,26 @@ function PatientDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedPatient?._id, currentDate.getFullYear(), currentDate.getMonth()]);
 
+    // Fetch handover notes when selected date or patient changes
+    useEffect(() => {
+        if (!selectedPatient?._id || !selectedDate) return;
+
+        let cancelled = false;
+        async function fetchNotes() {
+            try {
+                const res = await patientAPI.getHandoverNotes(
+                    selectedPatient._id,
+                    toISODate(selectedDate),
+                );
+                if (!cancelled) setHandoverNotes(res.data.data);
+            } catch {
+                if (!cancelled) setHandoverNotes([]);
+            }
+        }
+        fetchNotes();
+        return () => { cancelled = true; };
+    }, [selectedPatient?._id, selectedDate]);
+
     const headerPatient = toHeaderShape(selectedPatient);
     const medications   = toMedications(selectedPatient);
     const adls          = toAdls(selectedPatient);
@@ -105,6 +193,7 @@ function PatientDashboard() {
 
     const handleDateClick = (day) => {
         setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+        setSelectedNote(null);
         setDailySidebarOpen(true);
     };
 
@@ -133,6 +222,8 @@ function PatientDashboard() {
     const handlePatientSelect = (patient) => {
         setSelectedPatient(patient);
         setShifts({});
+        setHandoverNotes([]);
+        setSelectedNote(null);
         setDailySidebarOpen(false);
         setSelectedDate(null);
         setTaskStates({});
@@ -146,53 +237,67 @@ function PatientDashboard() {
                 <PatientSidebar onSelect={handlePatientSelect} />
 
                 <main className="flex flex-1 flex-col min-w-0">
-                    {headerPatient && <PatientHeader patient={headerPatient} />}
+                    {headerPatient && <PatientHeader patient={headerPatient} rawPatient={selectedPatient} />}
 
                     <div className="flex flex-1 gap-6 bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
                         <div className="flex-1 min-w-0 rounded-xl bg-white p-6 shadow-sm">
-                            <div className="mb-6 flex items-center justify-between">
-                                <span className="text-lg font-medium text-gray-700">
-                                    {formatDate(currentDate)}
-                                </span>
-                                <div className="flex space-x-2">
-                                    <button
-                                        onClick={getPreviousMonth}
-                                        className="rounded-lg p-2 transition hover:bg-gray-100"
-                                    >
-                                        <ChevronLeft className="h-5 w-5 text-gray-600" />
-                                    </button>
-                                    <button
-                                        onClick={getNextMonth}
-                                        className="rounded-lg p-2 transition hover:bg-gray-100"
-                                    >
-                                        <ChevronRight className="h-5 w-5 text-gray-600" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            {shiftsLoading ? (
-                                <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-                                    Loading schedule…
-                                </div>
-                            ) : (
-                                <CalendarGrid
-                                    currentDate={currentDate}
-                                    onDateClick={handleDateClick}
-                                    hasShifts={hasShifts}
-                                    isToday={isToday}
+                            {selectedNote ? (
+                                <HandoverNoteDetail
+                                    note={selectedNote}
+                                    onBack={() => setSelectedNote(null)}
                                 />
+                            ) : (
+                                <>
+                                    <div className="mb-6 flex items-center justify-between">
+                                        <span className="text-lg font-medium text-gray-700">
+                                            {formatDate(currentDate)}
+                                        </span>
+                                        <div className="flex space-x-2">
+                                            <button
+                                                onClick={getPreviousMonth}
+                                                className="rounded-lg p-2 transition hover:bg-gray-100"
+                                            >
+                                                <ChevronLeft className="h-5 w-5 text-gray-600" />
+                                            </button>
+                                            <button
+                                                onClick={getNextMonth}
+                                                className="rounded-lg p-2 transition hover:bg-gray-100"
+                                            >
+                                                <ChevronRight className="h-5 w-5 text-gray-600" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {shiftsLoading ? (
+                                        <div className="flex h-64 items-center justify-center text-sm text-gray-400">
+                                            Loading schedule…
+                                        </div>
+                                    ) : (
+                                        <CalendarGrid
+                                            currentDate={currentDate}
+                                            onDateClick={handleDateClick}
+                                            hasShifts={hasShifts}
+                                            isToday={isToday}
+                                        />
+                                    )}
+                                </>
                             )}
                         </div>
 
                         {dailySidebarOpen && (
                             <DailySidebar
                                 selectedDate={selectedDate}
-                                onClose={() => setDailySidebarOpen(false)}
+                                onClose={() => {
+                                    setDailySidebarOpen(false);
+                                    setSelectedNote(null);
+                                }}
                                 shifts={getShiftsForDate(selectedDate)}
                                 medications={medications}
                                 adls={adls}
                                 taskStates={taskStates}
                                 onToggleTask={toggleTask}
+                                handoverNotes={handoverNotes}
+                                onNoteClick={setSelectedNote}
                             />
                         )}
                     </div>

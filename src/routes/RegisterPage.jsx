@@ -12,6 +12,8 @@ function RegisterPage(){
 
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
         username: '',
         email: '',
         password: '',
@@ -37,6 +39,8 @@ function RegisterPage(){
 
         try {
             const result = await authAPI.signup(
+                formData.firstName,
+                formData.lastName,
                 formData.username,
                 formData.email,
                 formData.password
@@ -59,12 +63,42 @@ function RegisterPage(){
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className='space-y-4'>
+                        <div className='grid grid-cols-2 gap-4'>
+                            <div className='space-y-2'>
+                                <label htmlFor="firstName" className='text-sm font-medium leading-none'>
+                                    First Name
+                                </label>
+                                <input
+                                type="text"
+                                id="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                required
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                placeholder="First name"
+                                />
+                            </div>
+                            <div className='space-y-2'>
+                                <label htmlFor="lastName" className='text-sm font-medium leading-none'>
+                                    Last Name
+                                </label>
+                                <input
+                                type="text"
+                                id="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                required
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                placeholder="Last name"
+                                />
+                            </div>
+                        </div>
                         <div className='space-y-2'>
                             <label htmlFor="username" className='text-sm font-medium leading-none'>
                                 Username
                             </label>
                             <input
-                            type="username"
+                            type="text"
                             id="username"
                             value={formData.username}
                             onChange={handleChange}

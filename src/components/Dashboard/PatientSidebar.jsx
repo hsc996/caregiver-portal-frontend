@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { UserRound } from 'lucide-react';
 import { patientAPI } from '../../api/patient';
+import { useNotificationService } from '../Notifications/notificationService';
 
 function Initials({ firstName, lastName }) {
     const letters = `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.toUpperCase();
@@ -15,6 +16,7 @@ function PatientSidebar({ onSelect }) {
     const [patients, setPatients] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { sendErrorNotification } = useNotificationService();
 
     useEffect(() => {
         async function fetchPatients() {
@@ -26,6 +28,8 @@ function PatientSidebar({ onSelect }) {
                     setSelectedId(list[0]._id);
                     onSelect(list[0]);
                 }
+            } catch {
+                sendErrorNotification('Failed to load patient list.');
             } finally {
                 setLoading(false);
             }

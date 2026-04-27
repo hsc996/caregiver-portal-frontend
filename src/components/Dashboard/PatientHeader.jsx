@@ -1,7 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 
-function PatientHeader({ patient }) {
+function PatientHeader({ patient, rawPatient }) {
   const navigate = useNavigate();
+
+  function handleEditClick() {
+    if (!patient._id) return;
+    navigate(`/patient/${patient._id}`, { state: { patient: rawPatient } });
+  }
 
   return (
     <>
@@ -9,7 +14,7 @@ function PatientHeader({ patient }) {
         <div className="flex items-center justify-start space-x-6 p-8 ml-6">
           <div className="relative">
             <button
-              onClick={() => patient._id && navigate(`/patient/${patient._id}`)}
+              onClick={handleEditClick}
               className="relative group focus:outline-none"
               aria-label="Edit patient profile"
             >

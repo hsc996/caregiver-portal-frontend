@@ -53,7 +53,7 @@ api.interceptors.response.use((response) => response, async (error) => {
         } catch (refreshError) {
             localStorage.removeItem('userJwt');
             localStorage.removeItem('refreshToken');
-            window.location.href = '/login';
+            window.location.href = '/signin';
             return Promise.reject(refreshError);
         }
     }
