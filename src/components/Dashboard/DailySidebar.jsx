@@ -42,7 +42,7 @@ function DailySidebar({
   const isToday = selectedDate?.toDateString() === new Date().toDateString();
 
   return (
-    <div className="p-6 animate-in slide-in-from-right w-96 rounded-xl bg-white shadow-lg overflow-y-auto">
+    <div className="p-6 w-96 rounded-xl bg-white shadow-lg overflow-y-auto">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800">
           {selectedDate?.toLocaleDateString("en-US", {

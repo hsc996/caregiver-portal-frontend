@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import MainNav from '../components/LandingPage/MainNav';
 import CalendarGrid from '../components/Dashboard/CaregiverCal';
 import { ChevronLeft, ChevronRight, ArrowLeft, FileText, Tag } from 'lucide-react';
@@ -284,22 +285,32 @@ function PatientDashboard() {
                             )}
                         </div>
 
+                        <AnimatePresence>
                         {dailySidebarOpen && (
-                            <DailySidebar
-                                selectedDate={selectedDate}
-                                onClose={() => {
-                                    setDailySidebarOpen(false);
-                                    setSelectedNote(null);
-                                }}
-                                shifts={getShiftsForDate(selectedDate)}
-                                medications={medications}
-                                adls={adls}
-                                taskStates={taskStates}
-                                onToggleTask={toggleTask}
-                                handoverNotes={handoverNotes}
-                                onNoteClick={setSelectedNote}
-                            />
+                            <motion.div
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: 384, opacity: 1 }}
+                                exit={{ width: 0, opacity: 0 }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                style={{ flexShrink: 0, overflow: 'hidden' }}
+                            >
+                                <DailySidebar
+                                    selectedDate={selectedDate}
+                                    onClose={() => {
+                                        setDailySidebarOpen(false);
+                                        setSelectedNote(null);
+                                    }}
+                                    shifts={getShiftsForDate(selectedDate)}
+                                    medications={medications}
+                                    adls={adls}
+                                    taskStates={taskStates}
+                                    onToggleTask={toggleTask}
+                                    handoverNotes={handoverNotes}
+                                    onNoteClick={setSelectedNote}
+                                />
+                            </motion.div>
                         )}
+                        </AnimatePresence>
                     </div>
                 </main>
             </div>
