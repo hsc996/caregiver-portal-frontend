@@ -1,29 +1,9 @@
 import { useState } from "react";
-import { X, User, Calendar, Pill, ClipboardList, Plus, ChevronDown, FileText } from "lucide-react";
+import { X, User, Calendar, Pill, ClipboardList, Plus, FileText } from "lucide-react";
 import ShiftCard from "./ShiftCard";
 import MedicationItem from "./MedicationItem";
 import ADLItem from "./ADLItem";
-
-function Section({ icon: Icon, label, open, onToggle, action, children }) {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
-        <button
-          onClick={onToggle}
-          className="flex items-center gap-2 text-sm font-semibold tracking-wide text-gray-700 uppercase hover:text-gray-900 transition-colors"
-        >
-          <Icon className="h-4 w-4" />
-          {label}
-          <ChevronDown
-            className={`h-3.5 w-3.5 text-gray-400 transition-transform duration-200 ${open ? "" : "-rotate-90"}`}
-          />
-        </button>
-        {action}
-      </div>
-      {open && children}
-    </div>
-  );
-}
+import { AccordionSection } from "../ui/Accordion";
 
 function HandoverNoteItem({ note, onClick }) {
   const time = new Date(note.submittedAt).toLocaleTimeString("en-US", {
@@ -77,7 +57,7 @@ function DailySidebar({
       </div>
 
       <div className="space-y-6">
-        <Section
+        <AccordionSection
           icon={User}
           label="Scheduled Shifts"
           open={shiftsOpen}
@@ -95,9 +75,9 @@ function DailySidebar({
               <p className="text-sm text-gray-500">No shifts scheduled</p>
             </div>
           )}
-        </Section>
+        </AccordionSection>
 
-        <Section
+        <AccordionSection
           icon={Pill}
           label="Medications"
           open={medsOpen}
@@ -114,9 +94,9 @@ function DailySidebar({
               />
             ))}
           </div>
-        </Section>
+        </AccordionSection>
 
-        <Section
+        <AccordionSection
           icon={ClipboardList}
           label="Daily Tasks (ADLs)"
           open={adlsOpen}
@@ -137,9 +117,9 @@ function DailySidebar({
               />
             ))}
           </div>
-        </Section>
+        </AccordionSection>
 
-        <Section
+        <AccordionSection
           icon={FileText}
           label="Handover Notes"
           open={handoverOpen}
@@ -157,7 +137,7 @@ function DailySidebar({
               <p className="text-sm text-gray-500">No notes submitted</p>
             </div>
           )}
-        </Section>
+        </AccordionSection>
       </div>
     </div>
   );
