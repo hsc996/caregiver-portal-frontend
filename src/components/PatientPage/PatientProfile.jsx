@@ -117,7 +117,7 @@ function PatientProfile() {
                 emergencyContacts: form.emergencyContacts.filter(c => c.name || c.email || c.phoneNumber),
             };
             const res = await patientAPI.updatePatient(id, payload);
-            setPatient(res.data.data);
+            setPatient(res.data.data ?? null);
             sendSuccessNotification('Patient record saved.');
         } catch {
             sendErrorNotification('Failed to save patient record.');
@@ -143,6 +143,14 @@ function PatientProfile() {
     async function handleFileChange(e) {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            sendErrorNotification('Invalid file type. Please upload a JPEG, PNG, or WebP image.');
+            e.target.value = '';
+            return;
+        }
+
         setSelectedFile(file);
         setPreviewUrl(URL.createObjectURL(file));
         setUploadProgress(0);
@@ -153,7 +161,7 @@ function PatientProfile() {
             const res = await patientAPI.uploadImage(id, file, (pct) => {
                 setUploadProgress(pct);
             });
-            setNewImgUrl(res.data.data.profileImg);
+            setNewImgUrl(res.data.data?.profileImg);
             setUploadProgress(100);
             setUploadComplete(true);
         } catch {

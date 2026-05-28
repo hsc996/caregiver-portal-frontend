@@ -74,6 +74,9 @@ api.interceptors.response.use((response) => response, async (error) => {
         );
 
         const { token, refreshToken: newRefreshToken } = response.data;
+        if (!token || typeof token !== 'string') {
+            throw new Error('Invalid response from refresh endpoint');
+        }
         localStorage.setItem('userJwt', token);
         if (newRefreshToken) {
             localStorage.setItem('refreshToken', newRefreshToken);
