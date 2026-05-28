@@ -14,7 +14,7 @@ function HeroSection() {
           className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
         ></div>
       </div>
-      <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+      <div className="mx-auto max-w-2xl py-16 sm:py-28 lg:py-36">
         {/* <div className="hidden sm:mb-8 sm:flex sm:justify-center">
           <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
             Announcing our next round of funding.{" "}
