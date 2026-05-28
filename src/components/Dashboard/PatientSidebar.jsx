@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { UserRound } from 'lucide-react';
+import { motion } from 'motion/react';
 import { patientAPI } from '../../api/patient';
 
 function Initials({ firstName, lastName }) {
@@ -88,14 +89,20 @@ function PatientSidebar({ onSelect }) {
                             const active = patient._id === selectedId;
                             const fullName = `${patient.firstName} ${patient.lastName}`;
                             return (
-                                <li key={patient._id}>
+                                <li key={patient._id} className="relative group">
+                                    {!active && (
+                                        <div className="absolute inset-x-0 inset-y-0.5 rounded-full bg-gray-200/70 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                                    )}
+                                    {active && (
+                                        <motion.div
+                                            layoutId="sidebar-highlight"
+                                            className="absolute inset-x-0 inset-y-0.5 rounded-full bg-indigo-50"
+                                            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                                        />
+                                    )}
                                     <button
                                         onClick={() => handleSelect(patient)}
-                                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
-                                            active
-                                                ? 'bg-indigo-50 text-indigo-700'
-                                                : 'text-gray-700 hover:bg-gray-50'
-                                        }`}
+                                        className="relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left"
                                     >
                                         {patient.profileImg ? (
                                             <img
