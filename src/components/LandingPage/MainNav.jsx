@@ -1,12 +1,14 @@
 import { Calendar } from "lucide-react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuthContext } from '../../contexts/AuthContext/AuthContext';
+import { authAPI } from '../../api/auth';
 
 function MainNav() {
   const { userJwt, setUserJwt, currentUser } = useUserAuthContext();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await authAPI.logout();
     setUserJwt('');
     navigate('/');
   };

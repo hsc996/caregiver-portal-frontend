@@ -36,8 +36,14 @@ export const authAPI = {
 
         return response.data;
     },
-    logout: () => {
-        localStorage.removeItem('userJwt');
-        localStorage.removeItem('refreshToken');
+    logout: async () => {
+        try {
+            await api.post('/auth/logout');
+        } catch {
+            // proceed with local cleanup even if the server call fails
+        } finally {
+            localStorage.removeItem('userJwt');
+            localStorage.removeItem('refreshToken');
+        }
     }
 }

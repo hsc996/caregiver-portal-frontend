@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { UserRound } from 'lucide-react';
 import { patientAPI } from '../../api/patient';
-import { useNotificationService } from '../Notifications/notificationService';
 
 function Initials({ firstName, lastName }) {
     const letters = `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.toUpperCase();
@@ -16,27 +15,37 @@ function PatientSidebar({ onSelect }) {
     const [patients, setPatients] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { sendErrorNotification } = useNotificationService();
+    const [error, setError] = useState(false);
+    const [retryCount, setRetryCount] = useState(0);
+
+    const retry = () => {
+        setError(false);
+        setLoading(true);
+        setRetryCount((c) => c + 1);
+    };
 
     useEffect(() => {
+        let cancelled = false;
         async function fetchPatients() {
             try {
                 const res = await patientAPI.getAllPatients();
-                const list = res.data.data;
+                if (cancelled) return;
+                const list = res.data.data ?? [];
                 setPatients(list);
                 if (list.length > 0) {
                     setSelectedId(list[0]._id);
                     onSelect(list[0]);
                 }
             } catch {
-                sendErrorNotification('Failed to load patient list.');
+                if (!cancelled) setError(true);
             } finally {
-                setLoading(false);
+                if (!cancelled) setLoading(false);
             }
         }
         fetchPatients();
+        return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [retryCount]);
 
     function handleSelect(patient) {
         setSelectedId(patient._id);
@@ -60,6 +69,16 @@ function PatientSidebar({ onSelect }) {
                                 <div className="h-3.5 w-28 rounded bg-gray-100 animate-pulse" />
                             </div>
                         ))}
+                    </div>
+                ) : error ? (
+                    <div className="flex flex-col items-center gap-3 px-4 py-6 text-center">
+                        <p className="text-xs text-gray-400">Failed to load patients</p>
+                        <button
+                            onClick={retry}
+                            className="rounded-md bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 hover:bg-indigo-100 transition-colors"
+                        >
+                            Try again
+                        </button>
                     </div>
                 ) : patients.length === 0 ? (
                     <p className="px-4 py-6 text-center text-xs text-gray-400">No patients found</p>
