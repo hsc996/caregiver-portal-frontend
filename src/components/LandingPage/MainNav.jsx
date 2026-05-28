@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuthContext } from '../../contexts/AuthContext/AuthContext';
 
 function MainNav() {
-  const [userJwt, setUserJwt] = useUserAuthContext();
+  const { userJwt, setUserJwt, currentUser } = useUserAuthContext();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -24,25 +24,27 @@ function MainNav() {
             </div>
             <div className="flex h-full items-center gap-3">
               {userJwt ? (
-                <button
-                  onClick={handleLogout}
-                  className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors"
-                >
-                  Logout
-                </button>
-              ) : (
                 <>
-                  <Link to="/signin">
-                    <button className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors">
-                      Login
-                    </button>
-                  </Link>
-                  <Link to="/signup">
-                    <button className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 text-sm font-medium transition-colors">
-                      Sign Up
-                    </button>
-                  </Link>
+                  {currentUser?.role === 'Admin' && (
+                    <Link to="/signup">
+                      <button className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 text-sm font-medium transition-colors">
+                        Create User
+                      </button>
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors"
+                  >
+                    Logout
+                  </button>
                 </>
+              ) : (
+                <Link to="/signin">
+                  <button className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors">
+                    Login
+                  </button>
+                </Link>
               )}
             </div>
           </div>

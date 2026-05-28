@@ -6,7 +6,7 @@ import { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent} 
 import { useNotificationService } from '../components/Notifications/notificationService';
 
 function LoginPage(){
-    const [, setUserJwt] = useUserAuthContext();
+    const { setUserJwt } = useUserAuthContext();
     const navigate = useNavigate();
     const { sendErrorNotification } = useNotificationService();
 

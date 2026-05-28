@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/Card';
 import { authAPI } from '../api/auth';
 import { useNotificationService } from '../components/Notifications/notificationService';
 
 function RegisterPage(){
-    const [, setUserJwt] = useUserAuthContext();
     const navigate = useNavigate();
     const { sendErrorNotification } = useNotificationService();
 
@@ -38,18 +36,16 @@ function RegisterPage(){
         setLoading(true)
 
         try {
-            const result = await authAPI.signup(
+            await authAPI.signup(
                 formData.firstName,
                 formData.lastName,
                 formData.username,
                 formData.email,
                 formData.password
             );
-            setUserJwt(result.token);
-            localStorage.setItem('refreshToken', result.refreshToken);
             navigate('/dashboard');
         } catch (error) {
-            sendErrorNotification(error.response?.data?.message || 'Sign up failed');
+            sendErrorNotification(error.response?.data?.message || 'Failed to create user');
         } finally {
             setLoading(false);
         }

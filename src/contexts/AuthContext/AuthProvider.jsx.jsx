@@ -1,5 +1,14 @@
-import {  useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { UserAuthContext } from "./AuthContext";
+
+function decodeJwt(jwt) {
+    try {
+        const payload = JSON.parse(atob(jwt.split('.')[1]));
+        return payload;
+    } catch {
+        return null;
+    }
+}
 
 export function UserAuthContextProvider({ children }){
     let [userJwt, setUserJwtState] = useState(() => {
@@ -14,30 +23,32 @@ export function UserAuthContextProvider({ children }){
             localStorage.removeItem('userJwt');
         }
     }
-
-    // Basic expiry check on mount/when token changes
+    
     useEffect(() => {
         if (!userJwt) return;
 
-        try {
-            // Decode JWT to check expiry
-            const payload = JSON.parse(atob(userJwt.split('.')[1]));
-            const expiresAt = payload.exp * 1000;
-            const now = Date.now();
+        const payload = decodeJwt(userJwt);
+        if (!payload) {
+            console.error('Invalid token format');
+            setUserJwt('');
+            return;
+        }
 
-            // If token is already expired, clear it
-            if (expiresAt < now){
-                console.log("Token expired, clearing...");
-                setUserJwt('');
-            }
-        } catch (error) {
-            console.error('Invalid token format: ' + error);
+        if (payload.exp * 1000 < Date.now()) {
+            console.log("Token expired, clearing...");
             setUserJwt('');
         }
     }, [userJwt]);
 
+    const currentUser = useMemo(() => {
+        if (!userJwt) return null;
+        const payload = decodeJwt(userJwt);
+        if (!payload) return null;
+        return { id: payload.id, username: payload.username, role: payload.role };
+    }, [userJwt]);
+
     return (
-        <UserAuthContext.Provider value={[userJwt, setUserJwt]}>
+        <UserAuthContext.Provider value={{ userJwt, setUserJwt, currentUser }}>
             {children}
         </UserAuthContext.Provider>
     )
