@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import fallbackProfileImg from '../../assets/images/example_profilepic.png';
 
 function PatientHeader({ patient, rawPatient }) {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function PatientHeader({ patient, rawPatient }) {
               aria-label="Edit patient profile"
             >
               <img
-                src={patient.profileImg || './src/assets/images/example_profilepic.png'}
+                src={patient.profileImg || fallbackProfileImg}
                 alt={patient.name}
                 className="h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-indigo-100 object-cover transition-opacity group-hover:opacity-80 cursor-pointer"
               />

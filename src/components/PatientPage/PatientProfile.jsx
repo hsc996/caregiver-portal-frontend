@@ -5,8 +5,9 @@ import MainNav from '../LandingPage/MainNav';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { patientAPI } from '../../api/patient';
 import { useNotificationService } from '../Notifications/notificationService';
+import fallbackProfileImg from '../../assets/images/example_profilepic.png';
 
-const FALLBACK_IMG = '/src/assets/images/example_profilepic.png';
+const FALLBACK_IMG = fallbackProfileImg;
 
 function arrayToString(arr) {
     return Array.isArray(arr) ? arr.join(', ') : (arr || '');
