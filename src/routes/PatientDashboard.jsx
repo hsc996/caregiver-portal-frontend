@@ -14,7 +14,7 @@ function toHeaderShape(patient) {
     if (!patient) return null;
     return {
         _id: patient._id,
-        name: `${patient.firstName} ${patient.lastName}`,
+        name: [patient.firstName, patient.lastName].filter(Boolean).join(' ') || '—',
         profileImg: patient.profileImg ?? null,
         dob: patient.dateOfBirth
             ? new Date(patient.dateOfBirth).toLocaleDateString('en-US', {
@@ -146,7 +146,7 @@ function PatientDashboard() {
                     currentDate.getFullYear(),
                     currentDate.getMonth() + 1,
                 );
-                if (!cancelled) setShifts(res.data.data);
+                if (!cancelled) setShifts(res.data.data ?? {});
             } catch {
                 if (!cancelled) sendErrorNotification('Failed to load shifts.');
             } finally {
@@ -169,7 +169,7 @@ function PatientDashboard() {
                     selectedPatient._id,
                     toISODate(selectedDate),
                 );
-                if (!cancelled) setHandoverNotes(res.data.data);
+                if (!cancelled) setHandoverNotes(res.data.data ?? []);
             } catch {
                 if (!cancelled) setHandoverNotes([]);
             }
