@@ -17,7 +17,7 @@ function MainNav() {
         <div className="z-51 h-20 w-full max-w-7xl px-6 backdrop-blur-[6px]">
           <div className="flex h-full justify-between">
             <div className="flex items-center space-x-3">
-              <Link to="/" className="flex items-center space-x-3">
+              <Link to={userJwt ? "/dashboard" : "/"} className="flex items-center space-x-3">
                 <Calendar className="h-7 w-7 text-indigo-600"/>
                 <h1 className="text-2xl text-indigo-600">CareSync</h1>
               </Link>
