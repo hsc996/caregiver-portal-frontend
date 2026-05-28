@@ -3,7 +3,9 @@ import { UserAuthContext } from "./AuthContext";
 
 function decodeJwt(jwt) {
     try {
-        const payload = JSON.parse(atob(jwt.split('.')[1]));
+        const parts = jwt.split('.');
+        if (parts.length !== 3) return null;
+        const payload = JSON.parse(atob(parts[1]));
         return payload;
     } catch {
         return null;

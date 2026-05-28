@@ -2,8 +2,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 
 export function ProtectedRoute() {
-    const { userJwt } = useUserAuthContext();
-    return userJwt ? <Outlet /> : <Navigate to="/signin" replace />;
+    const { userJwt, currentUser } = useUserAuthContext();
+    return (userJwt && currentUser) ? <Outlet /> : <Navigate to="/signin" replace />;
 }
 
 export function AdminRoute() {
