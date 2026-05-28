@@ -4,7 +4,7 @@ function ShiftCard({ shift }) {
   return (
     <div className="rounded-lg border border-gray-200 p-4 transition hover:border-indigo-300">
       <div className="flex items-start space-x-3">
-        <div className="bf-indigo-100 rounded-lg p-2">
+        <div className="bg-indigo-100 rounded-lg p-2">
           <User className="h-5 w-5 text-indigo-600" />
         </div>
         <div className="flex-1">

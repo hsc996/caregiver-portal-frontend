@@ -10,7 +10,7 @@ export function NotificationProvider({ children }) {
     };
 
     const addNotification = (type, message) => {
-        const id = Date.now();
+        const id = crypto.randomUUID();
         setNotifications(prev => [...prev, { id, type, message }]);
         setTimeout(() => removeNotification(id), 4000);
     };
