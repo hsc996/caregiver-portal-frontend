@@ -138,6 +138,7 @@ function PatientProfile() {
     }
 
     function closeModal() {
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
         setShowModal(false);
     }
 
@@ -167,6 +168,10 @@ function PatientProfile() {
             setUploadComplete(true);
         } catch {
             sendErrorNotification('Image upload failed.');
+            setSelectedFile(null);
+            setPreviewUrl(null);
+            setUploadProgress(0);
+            setUploadComplete(false);
             setUploading(false);
         } finally {
             setUploading(false);
@@ -174,7 +179,7 @@ function PatientProfile() {
     }
 
     function handleSaveImage() {
-        if (!uploadComplete) return;
+        if (!uploadComplete || !newImgUrl) return;
         setPatient(prev => ({ ...prev, profileImg: newImgUrl }));
         sendSuccessNotification('Profile photo updated.');
         closeModal();
