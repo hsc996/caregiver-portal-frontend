@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 
 const MotionButton = motion.button;
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 const MotionAnchor = motion.a;
 
 function MagneticButton({ as = 'button', className, children, ...props }) {

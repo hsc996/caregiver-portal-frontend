@@ -39,7 +39,7 @@ function HeroSection() {
             >
               Get started
             </MagneticButton>
-            <a href="#" className="text-sm leading-6 font-semibold text-white">
+            <a href="#" className="text-sm leading-6 font-semibold text-indigo-500">
               Learn more <span aria-hidden="true">→</span>
             </a>
           </div>
