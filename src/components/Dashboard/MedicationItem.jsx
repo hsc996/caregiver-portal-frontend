@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Check, Clock } from "lucide-react";
+import { motion } from "motion/react";
+import { Check, Clock, User } from "lucide-react";
 
 function parseMedTime(timeStr) {
     if (!timeStr || timeStr === "—") return null;
@@ -10,8 +11,8 @@ function parseMedTime(timeStr) {
     return d;
 }
 
-function getMedStatus(medication, isCompleted, isToday, now) {
-    if (!isToday || isCompleted) return "normal";
+function getMedStatus(medication, isGiven, isToday, now) {
+    if (!isToday || isGiven) return "normal";
     const dueTime = parseMedTime(medication.time);
     if (!dueTime) return "normal";
     const diffMs = now - dueTime;
@@ -21,7 +22,8 @@ function getMedStatus(medication, isCompleted, isToday, now) {
     return "normal";
 }
 
-function MedicationItem({ medication, isCompleted, onToggle, isToday }) {
+function MedicationItem({ medication, givenBy, givenAt, onValidate, isToday }) {
+    const isGiven = !!givenAt;
     const [now, setNow] = useState(() => new Date());
 
     useEffect(() => {
@@ -30,9 +32,9 @@ function MedicationItem({ medication, isCompleted, onToggle, isToday }) {
         return () => clearInterval(id);
     }, [isToday]);
 
-    const status = getMedStatus(medication, isCompleted, isToday, now);
+    const status = getMedStatus(medication, isGiven, isToday, now);
 
-    const containerClass = isCompleted
+    const containerClass = isGiven
         ? "border-green-200 bg-green-50"
         : status === "due"
         ? "border-green-400 bg-green-50 shadow-sm shadow-green-200"
@@ -40,35 +42,24 @@ function MedicationItem({ medication, isCompleted, onToggle, isToday }) {
         ? "border-red-400 bg-red-50 shadow-sm shadow-red-200"
         : "border-gray-200 hover:border-indigo-200";
 
-    const checkboxClass = isCompleted
-        ? "border-green-500 bg-green-500"
-        : status === "due"
-        ? "border-green-400 hover:border-green-500"
-        : status === "overdue"
-        ? "border-red-400 hover:border-red-500"
-        : "border-gray-300 hover:border-indigo-400";
+    const givenAtFormatted = givenAt
+        ? new Date(givenAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
+        : null;
 
     return (
         <div className={`rounded-lg border p-3 transition ${containerClass}`}>
-            <div className="flex items-start space-x-3">
-                <button
-                    onClick={onToggle}
-                    className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 transition ${checkboxClass}`}
-                >
-                    {isCompleted && <Check className="h-3 w-3 text-white" />}
-                </button>
+            <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                        <h5
-                            className={`font-medium truncate ${
-                                isCompleted ? "text-green-900 line-through" : "text-gray-900"
-                            }`}
-                        >
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <h5 className={`font-medium truncate ${isGiven ? "text-green-900" : "text-gray-900"}`}>
                             {medication.name}
                         </h5>
+                        {medication.dosage && (
+                            <span className="shrink-0 text-xs text-gray-500">{medication.dosage}</span>
+                        )}
                         {status === "due" && (
                             <span className="shrink-0 text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
-                                Medication due
+                                Due now
                             </span>
                         )}
                         {status === "overdue" && (
@@ -77,11 +68,31 @@ function MedicationItem({ medication, isCompleted, onToggle, isToday }) {
                             </span>
                         )}
                     </div>
+
                     <div className="mt-1 flex items-center text-sm text-gray-600">
                         <Clock className="mr-1 h-3 w-3 shrink-0" />
                         {medication.time} • {medication.frequency}
                     </div>
+
+                    {isGiven && givenBy && (
+                        <div className="mt-1.5 flex items-center gap-1 text-xs text-green-700">
+                            <Check className="h-3 w-3 shrink-0" />
+                            <User className="h-3 w-3 shrink-0" />
+                            Given by {givenBy} at {givenAtFormatted}
+                        </div>
+                    )}
                 </div>
+
+                {!isGiven && (
+                    <motion.button
+                        onClick={onValidate}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        className="shrink-0 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors"
+                    >
+                        Validate
+                    </motion.button>
+                )}
             </div>
         </div>
     );

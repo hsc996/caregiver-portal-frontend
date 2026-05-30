@@ -46,7 +46,13 @@ export function UserAuthContextProvider({ children }){
         if (!userJwt) return null;
         const payload = decodeJwt(userJwt);
         if (!payload) return null;
-        return { id: payload.id, username: payload.username, role: payload.role };
+        return {
+            id: payload.id,
+            username: payload.username,
+            role: payload.role,
+            firstName: payload.firstName ?? '',
+            lastName: payload.lastName ?? '',
+        };
     }, [userJwt]);
 
     return (

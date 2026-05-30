@@ -18,6 +18,12 @@ export const patientAPI = {
     getHandoverNotes: (id, date) =>
         api.get(`/patient/${id}/handover-notes`, { params: { date } }),
 
+    getMedicationAdministrations: (patientId, date) =>
+        api.get(`/patient/${patientId}/medication-administrations`, { params: { date } }),
+
+    recordMedicationAdministration: (patientId, data) =>
+        api.post(`/patient/${patientId}/medication-administrations`, data),
+
     uploadImage: (id, file, onProgress) => {
         const formData = new FormData();
         formData.append('profileImg', file);

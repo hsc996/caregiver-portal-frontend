@@ -8,6 +8,7 @@ import PatientHeader from '../components/Dashboard/PatientHeader';
 import PatientSidebar from '../components/Dashboard/PatientSidebar';
 import { patientAPI } from '../api/patient';
 import { useNotificationService } from '../components/Notifications/notificationService';
+import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 
 // ─── Shape adapters ──────────────────────────────────────────────────────────
 
@@ -33,10 +34,11 @@ function toMedications(patient) {
         .flatMap((m, i) =>
             (m.scheduledTimes?.length ? m.scheduledTimes : ['—']).map((time, j) => ({
                 id: `${i}-${j}`,
-                name: [m.name, m.dosage].filter(Boolean).join(' '),
+                name: m.name ?? '',
+                dosage: m.dosage ?? '',
+                route: m.route ?? '',
                 time,
                 frequency: m.frequency ?? '',
-                completed: false,
             }))
         )
         .sort((a, b) => {
@@ -123,6 +125,7 @@ function HandoverNoteDetail({ note, onBack }) {
 
 function PatientDashboard() {
     const { sendErrorNotification } = useNotificationService();
+    const { currentUser } = useUserAuthContext();
 
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [currentDate, setCurrentDate]         = useState(new Date());
@@ -131,8 +134,9 @@ function PatientDashboard() {
     const [taskStates, setTaskStates]           = useState({});
     const [shifts, setShifts]                   = useState({});
     const [shiftsLoading, setShiftsLoading]     = useState(false);
-    const [handoverNotes, setHandoverNotes]     = useState([]);
-    const [selectedNote, setSelectedNote]       = useState(null);
+    const [handoverNotes, setHandoverNotes]       = useState([]);
+    const [selectedNote, setSelectedNote]         = useState(null);
+    const [medicationRecords, setMedicationRecords] = useState({});
 
     // Fetch shifts per month
     useEffect(() => {
@@ -179,6 +183,40 @@ function PatientDashboard() {
         return () => { cancelled = true; };
     }, [selectedPatient?._id, selectedDate]);
 
+    // Fetch medication administration records when selected date or patient changes
+    useEffect(() => {
+        if (!selectedPatient?._id || !selectedDate) {
+            setMedicationRecords({});
+            return;
+        }
+
+        let cancelled = false;
+        const meds = toMedications(selectedPatient);
+
+        patientAPI.getMedicationAdministrations(selectedPatient._id, toISODate(selectedDate))
+            .then((res) => {
+                if (cancelled) return;
+                const adminRecords = res.data.data ?? [];
+                const built = {};
+                for (const med of meds) {
+                    const match = adminRecords.find(
+                        (r) => r.medicationName === med.name && r.scheduledTime === med.time
+                    );
+                    if (match) {
+                        const u = match.administeredBy;
+                        built[med.id] = {
+                            givenBy: u ? `${u.firstName} ${u.lastName}`.trim() : 'Unknown',
+                            givenAt: new Date(match.actualAdministrationTime),
+                        };
+                    }
+                }
+                setMedicationRecords(built);
+            })
+            .catch(() => { if (!cancelled) setMedicationRecords({}); });
+
+        return () => { cancelled = true; };
+    }, [selectedPatient?._id, selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
+
     const headerPatient = toHeaderShape(selectedPatient);
     const medications   = toMedications(selectedPatient);
     const adls          = toAdls(selectedPatient);
@@ -220,10 +258,15 @@ function PatientDashboard() {
         setTaskStates((prev) => ({ ...prev, [key]: !prev[key] }));
     };
 
+    const handleMedicationValidated = (medId, record) => {
+        setMedicationRecords((prev) => ({ ...prev, [medId]: record }));
+    };
+
     const handlePatientSelect = (patient) => {
         setSelectedPatient(patient);
         setShifts({});
         setHandoverNotes([]);
+        setMedicationRecords({});
         setSelectedNote(null);
         setDailySidebarOpen(false);
         setSelectedDate(null);
@@ -311,6 +354,10 @@ function PatientDashboard() {
                                     onToggleTask={toggleTask}
                                     handoverNotes={handoverNotes}
                                     onNoteClick={setSelectedNote}
+                                    patientId={selectedPatient?._id}
+                                    currentUser={currentUser}
+                                    medicationRecords={medicationRecords}
+                                    onMedicationValidated={handleMedicationValidated}
                                 />
                             </motion.div>
                         )}
