@@ -17,6 +17,7 @@ function App() {
           {/* Public */}
           <Route path="/" element={<LandingPage />}/>
           <Route path="/signin" element={<LoginPage />}/>
+          <Route path="/signup" element={<RegisterPage />}/>
           <Route path="/forgot-password" element={<ForgotPassword />}/>
           <Route path="/reset-password" element={<ResetPasswordPage />}/>
 
@@ -24,11 +25,6 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<PatientDashboard />}/>
             <Route path="/patient/:id" element={<PatientProfile />}/>
-          </Route>
-
-          {/* Admin only */}
-          <Route element={<AdminRoute />}>
-            <Route path="/signup" element={<RegisterPage />}/>
           </Route>
         </Routes>
       </div>
