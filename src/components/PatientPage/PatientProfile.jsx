@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import MagneticButton from '../MagneticButton';
 import { ArrowLeft, Camera, Check, X } from 'lucide-react';
 import MainNav from '../LandingPage/MainNav';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
@@ -227,13 +228,13 @@ function PatientProfile() {
                                 />
                             </div>
                             <div>
-                                <button
+                                <MagneticButton
                                     onClick={openModal}
                                     className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
                                 >
                                     <Camera className="h-4 w-4" />
                                     Upload Photo
-                                </button>
+                                </MagneticButton>
                                 <p className="mt-1 text-xs text-gray-400">JPG, PNG or WebP · max 5 MB</p>
                             </div>
                         </div>
@@ -366,13 +367,13 @@ function PatientProfile() {
                     </Card>
 
                     <div className="flex justify-end">
-                        <button
+                        <MagneticButton
                             type="submit"
                             disabled={formSaving}
                             className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none transition-colors"
                         >
                             {formSaving ? 'Saving...' : 'Save Changes'}
-                        </button>
+                        </MagneticButton>
                     </div>
                 </form>
             </main>
@@ -411,12 +412,12 @@ function PatientProfile() {
 
                         {/* Browse button */}
                         {!uploading && !uploadComplete && (
-                            <button
+                            <MagneticButton
                                 onClick={() => fileInputRef.current?.click()}
                                 className="mb-4 w-full rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                             >
                                 Browse Files
-                            </button>
+                            </MagneticButton>
                         )}
 
                         {/* Progress bar */}
@@ -445,19 +446,19 @@ function PatientProfile() {
 
                         {/* Actions */}
                         <div className="flex gap-3">
-                            <button
+                            <MagneticButton
                                 onClick={closeModal}
                                 className="flex-1 rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </MagneticButton>
+                            <MagneticButton
                                 onClick={handleSaveImage}
                                 disabled={!uploadComplete}
                                 className="flex-1 rounded-md bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40 disabled:pointer-events-none transition-colors"
                             >
                                 Save
-                            </button>
+                            </MagneticButton>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { X, User, Calendar, Pill, ClipboardList, Plus, FileText } from "lucide-react";
 import ShiftCard from "./ShiftCard";
 import MedicationItem from "./MedicationItem";
@@ -13,13 +14,15 @@ function HandoverNoteItem({ note, onClick }) {
   });
 
   return (
-    <button
+    <motion.button
       onClick={() => onClick(note)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-left transition hover:border-indigo-300 hover:bg-indigo-50"
     >
       <p className="text-sm font-medium text-gray-900 truncate">{note.caregiver}</p>
       <p className="mt-0.5 text-xs text-gray-500">{time}</p>
-    </button>
+    </motion.button>
   );
 }
 
@@ -51,9 +54,9 @@ function DailySidebar({
             day: "numeric",
           })}
         </h3>
-        <button onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
+        <motion.button onClick={onClose} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="rounded-lg p-1 hover:bg-gray-100">
           <X className="text-gray-500 h-5 w-5" />
-        </button>
+        </motion.button>
       </div>
 
       <div className="space-y-6">
@@ -102,9 +105,9 @@ function DailySidebar({
           open={adlsOpen}
           onToggle={() => setAdlsOpen((o) => !o)}
           action={
-            <button className="text-indigo-600 hover:text-indigo-700">
+            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="text-indigo-600 hover:text-indigo-700">
               <Plus className="h-5 w-5" />
-            </button>
+            </motion.button>
           }
         >
           <div className="space-y-2">

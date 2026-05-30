@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import MagneticButton from '../MagneticButton';
 
 function HeroSection() {
   return (
@@ -32,12 +32,13 @@ function HeroSection() {
             The all-in-one platform that helps caregivers organise schedules, track medications, and stay connected with their patients.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link
+            <MagneticButton
+              as="link"
               to="/signup"
               className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               Get started
-            </Link>
+            </MagneticButton>
             <a href="#" className="text-sm leading-6 font-semibold text-white">
               Learn more <span aria-hidden="true">→</span>
             </a>

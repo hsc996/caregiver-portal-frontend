@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuthContext } from '../../contexts/AuthContext/AuthContext';
 import { authAPI } from '../../api/auth';
+import MagneticButton from '../MagneticButton';
 
 function MainNav() {
   const { userJwt, setUserJwt, currentUser } = useUserAuthContext();
@@ -28,25 +29,21 @@ function MainNav() {
               {userJwt ? (
                 <>
                   {currentUser?.role === 'Admin' && (
-                    <Link to="/signup">
-                      <button className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 text-sm font-medium transition-colors">
-                        Create User
-                      </button>
-                    </Link>
+                    <MagneticButton as="link" to="/signup" className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 text-sm font-medium transition-colors">
+                      Create User
+                    </MagneticButton>
                   )}
-                  <button
+                  <MagneticButton
                     onClick={handleLogout}
                     className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors"
                   >
                     Logout
-                  </button>
+                  </MagneticButton>
                 </>
               ) : (
-                <Link to="/signin">
-                  <button className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors">
-                    Login
-                  </button>
-                </Link>
+                <MagneticButton as="link" to="/signin" className="rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-2 text-sm font-medium transition-colors">
+                  Login
+                </MagneticButton>
               )}
             </div>
           </div>

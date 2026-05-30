@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 import fallbackProfileImg from '../../assets/images/example_profilepic.png';
 
 function PatientHeader({ patient, rawPatient }) {
@@ -14,8 +15,10 @@ function PatientHeader({ patient, rawPatient }) {
       <div className="flex w-full bg-white py-4">
         <div className="flex items-center justify-start space-x-6 p-8 ml-6">
           <div className="relative">
-            <button
+            <motion.button
               onClick={handleEditClick}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
               className="relative group focus:outline-none"
               aria-label="Edit patient profile"
             >
@@ -27,7 +30,7 @@ function PatientHeader({ patient, rawPatient }) {
               <span className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <span className="rounded-full bg-black/40 px-2 py-1 text-xs text-white">Edit</span>
               </span>
-            </button>
+            </motion.button>
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900">{patient.name}</h2>

@@ -1,3 +1,5 @@
+import { motion } from "motion/react";
+
 function CalendarGrid({ currentDate, hasShifts, onDateClick, isToday }) {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -34,9 +36,11 @@ function CalendarGrid({ currentDate, hasShifts, onDateClick, isToday }) {
         const day = i + 1;
         const shifts = hasShifts(day);
         return (
-          <button
+          <motion.button
             key={day}
             onClick={() => onDateClick(day)}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
             className={`aspect-square rounded-lg p-2 text-sm transition-all hover:shadow-md ${
               isToday(day)
                 ? "bg-indigo-300 font-bold text-white"
@@ -53,7 +57,7 @@ function CalendarGrid({ currentDate, hasShifts, onDateClick, isToday }) {
                 </div>
               )}
             </div>
-          </button>
+          </motion.button>
         );
       })}
     </div>

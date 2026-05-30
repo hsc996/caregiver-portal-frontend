@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
+import MagneticButton from '../components/MagneticButton';
 import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 import { authAPI } from '../api/auth';
-import { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent} from '../components/ui/Card';
 import { useNotificationService } from '../components/Notifications/notificationService';
 
-function LoginPage(){
+function LoginPage() {
     const { setUserJwt } = useUserAuthContext();
     const navigate = useNavigate();
     const { sendErrorNotification } = useNotificationService();
@@ -17,87 +18,112 @@ function LoginPage(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
             const result = await authAPI.signin(email, password);
             setUserJwt(result.token);
             localStorage.setItem('refreshToken', result.refreshToken);
             navigate('/dashboard');
         } catch (error) {
-            sendErrorNotification(error.response?.data?.message || "Sign in failed.");
+            sendErrorNotification(error.response?.data?.message || 'Sign in failed.');
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle className="text-2xl text-center mb-4">Welcome back!</CardTitle>
-                    <CardDescription>Login to your account</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className='space-y-4'>
-                        <div className='space-y-2'>
-                            <label htmlFor="email" className="text-sm font-medium leading-none">
-                                Email
-                            </label>
-                            <input
+        <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#FFFDF2] p-4">
+
+            {/* Gradient orbs — positioned to sit behind the card */}
+            <motion.div
+                className="pointer-events-none absolute top-[15%] left-[20%] h-80 w-80 rounded-full bg-[#ededfb] blur-2xl"
+                animate={{ x: [0, 24, 0], y: [0, 32, 0] }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ opacity: 0.9 }}
+            />
+            <motion.div
+                className="pointer-events-none absolute bottom-[15%] right-[20%] h-72 w-72 rounded-full bg-indigo-200 blur-2xl"
+                animate={{ x: [0, -20, 0], y: [0, -24, 0] }}
+                transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+                style={{ opacity: 0.8 }}
+            />
+            <motion.div
+                className="pointer-events-none absolute top-[40%] right-[25%] h-60 w-60 rounded-full bg-amber-100 blur-2xl"
+                animate={{ x: [0, 16, 0], y: [0, -20, 0] }}
+                transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+                style={{ opacity: 0.7 }}
+            />
+
+            {/* Glass card */}
+            <motion.div
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                className="relative w-full max-w-md rounded-2xl border border-white/60 bg-white/30 px-8 py-10 shadow-xl shadow-black/[0.06] backdrop-blur-2xl"
+            >
+                {/* Header */}
+                <div className="mb-7 text-center">
+                    <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Welcome back!</h1>
+                    <p className="mt-1 text-sm text-zinc-500">Login to your account</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-1.5">
+                        <label htmlFor="email" className="text-sm font-medium text-zinc-700">
+                            Email
+                        </label>
+                        <input
                             type="email"
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                             placeholder="Enter email address"
-                            />
-                        </div>
-                        <div className='space-y-2'>
-                            <label htmlFor='password' className='text-sm font-medium leading-none'>
-                                Password
-                            </label>
-                            <input
+                            className="flex h-10 w-full rounded-lg border border-zinc-200 bg-white/80 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all hover:border-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:border-indigo-300"
+                        />
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label htmlFor="password" className="text-sm font-medium text-zinc-700">
+                            Password
+                        </label>
+                        <input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                             placeholder="Enter password"
-                            />
-                        </div>
+                            className="flex h-10 w-full rounded-lg border border-zinc-200 bg-white/80 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all hover:border-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:border-indigo-300"
+                        />
+                    </div>
 
-                        {/* Forgot password link */}
-                        <div className="text-right">
-                            <Link
-                                to="/forgot-password"
-                                className="text-sm text-primary hover:underline"
-                            >
-                                Forgot password?
-                            </Link>
-                        </div>
+                    <div className="text-right">
+                        <Link
+                            to="/forgot-password"
+                            className="text-sm text-indigo-600 hover:underline"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
 
-                        <button
+                    <MagneticButton
                         type="submit"
                         disabled={loading}
-                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full'
-                        >
-                            {loading ? 'Signing you in...' : 'Sign In'}
-                        </button>
-                    </form>
-                </CardContent>
-                <CardFooter>
-                    <p className='text-sm text-muted-foreground text-center w-full'>
-                        Don't have an account?{' '}
-                        <Link to="/signup" className="text-primary hover:underline font-medium">
+                        className="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 h-10 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                    >
+                        {loading ? 'Signing you in...' : 'Sign In'}
+                    </MagneticButton>
+                </form>
+
+                <p className="mt-6 text-center text-sm text-zinc-500">
+                    Don&apos;t have an account?{' '}
+                    <Link to="/signup" className="font-medium text-indigo-600 hover:underline">
                         Sign up
-                        </Link>
-                    </p>
-                </CardFooter>
-            </Card>
+                    </Link>
+                </p>
+            </motion.div>
         </div>
-    )
+    );
 }
 
 export default LoginPage;

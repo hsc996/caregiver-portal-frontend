@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { UserRound } from 'lucide-react';
 import { motion } from 'motion/react';
 import { patientAPI } from '../../api/patient';
+import MagneticButton from '../MagneticButton';
 
 function Initials({ firstName, lastName }) {
     const letters = `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.toUpperCase();
@@ -74,12 +75,12 @@ function PatientSidebar({ onSelect }) {
                 ) : error ? (
                     <div className="flex flex-col items-center gap-3 px-4 py-6 text-center">
                         <p className="text-xs text-gray-400">Failed to load patients</p>
-                        <button
+                        <MagneticButton
                             onClick={retry}
                             className="rounded-md bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 hover:bg-indigo-100 transition-colors"
                         >
                             Try again
-                        </button>
+                        </MagneticButton>
                     </div>
                 ) : patients.length === 0 ? (
                     <p className="px-4 py-6 text-center text-xs text-gray-400">No patients found</p>

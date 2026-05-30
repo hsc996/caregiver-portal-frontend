@@ -254,18 +254,22 @@ function PatientDashboard() {
                                             {formatDate(currentDate)}
                                         </span>
                                         <div className="flex space-x-2">
-                                            <button
+                                            <motion.button
                                                 onClick={getPreviousMonth}
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
                                                 className="rounded-lg p-2 transition hover:bg-gray-100"
                                             >
                                                 <ChevronLeft className="h-5 w-5 text-gray-600" />
-                                            </button>
-                                            <button
+                                            </motion.button>
+                                            <motion.button
                                                 onClick={getNextMonth}
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
                                                 className="rounded-lg p-2 transition hover:bg-gray-100"
                                             >
                                                 <ChevronRight className="h-5 w-5 text-gray-600" />
-                                            </button>
+                                            </motion.button>
                                         </div>
                                     </div>
 
