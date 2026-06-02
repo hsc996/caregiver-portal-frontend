@@ -12,8 +12,8 @@ function PatientHeader({ patient, rawPatient }) {
 
   return (
     <>
-      <div className="flex w-full bg-white py-4">
-        <div className="flex items-center justify-start space-x-6 p-8 ml-6">
+      <div className="flex w-full items-center bg-white/40 backdrop-blur-md border-b border-white/30 py-4 px-8">
+        <div className="flex items-center space-x-6 p-8 ml-6">
           <div className="relative">
             <motion.button
               onClick={handleEditClick}
@@ -32,24 +32,21 @@ function PatientHeader({ patient, rawPatient }) {
               </span>
             </motion.button>
           </div>
-          <div className="flex-1">
+          <div>
             <h2 className="text-2xl font-bold text-gray-900">{patient.name}</h2>
-            <div className="mt-3 space-y-0.5 text-sm">
-              <div>
-                <span className="text-gray-500">Date of Birth:</span>
-                <span className="ml-2 text-gray-900 font-medium">{patient.dob}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">Allergies:</span>
-                <span className="ml-2 text-gray-900 font-medium">{patient.allergies}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">Care Team:</span>
-                <span className="ml-2 text-gray-900 font-medium">{patient.carers}</span>
-              </div>
+            <div className="mt-3 text-sm">
+              <span className="text-gray-500">Date of Birth:</span>
+              <span className="ml-2 text-gray-900 font-medium">{patient.dob}</span>
             </div>
           </div>
         </div>
+
+        {patient.allergies && patient.allergies !== '—' && (
+          <div className="ml-auto mr-6 flex items-center gap-2 rounded-lg bg-red-50 border border-red-200 px-4 py-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-red-600">Allergies:</span>
+            <span className="text-sm font-medium text-red-800">{patient.allergies}</span>
+          </div>
+        )}
       </div>
     </>
   );

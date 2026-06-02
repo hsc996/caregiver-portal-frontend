@@ -205,6 +205,7 @@ function PatientDashboard() {
                     if (match) {
                         const u = match.administeredBy;
                         built[med.id] = {
+                            recordId: match._id,
                             givenBy: u ? `${u.firstName} ${u.lastName}`.trim() : 'Unknown',
                             givenAt: new Date(match.actualAdministrationTime),
                         };
@@ -260,6 +261,14 @@ function PatientDashboard() {
 
     const handleMedicationValidated = (medId, record) => {
         setMedicationRecords((prev) => ({ ...prev, [medId]: record }));
+    };
+
+    const handleMedicationUnvalidated = (medId) => {
+        setMedicationRecords((prev) => {
+            const next = { ...prev };
+            delete next[medId];
+            return next;
+        });
     };
 
     const handlePatientSelect = (patient) => {
@@ -358,6 +367,7 @@ function PatientDashboard() {
                                     currentUser={currentUser}
                                     medicationRecords={medicationRecords}
                                     onMedicationValidated={handleMedicationValidated}
+                                    onMedicationUnvalidated={handleMedicationUnvalidated}
                                 />
                             </motion.div>
                         )}

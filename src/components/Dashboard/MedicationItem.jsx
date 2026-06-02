@@ -22,7 +22,7 @@ function getMedStatus(medication, isGiven, isToday, now) {
     return "normal";
 }
 
-function MedicationItem({ medication, givenBy, givenAt, onValidate, isToday }) {
+function MedicationItem({ medication, givenBy, givenAt, onValidate, onUnvalidate, isToday }) {
     const isGiven = !!givenAt;
     const [now, setNow] = useState(() => new Date());
 
@@ -83,7 +83,7 @@ function MedicationItem({ medication, givenBy, givenAt, onValidate, isToday }) {
                     )}
                 </div>
 
-                {!isGiven && (
+                {!isGiven ? (
                     <motion.button
                         onClick={onValidate}
                         whileHover={{ scale: 1.04 }}
@@ -91,6 +91,15 @@ function MedicationItem({ medication, givenBy, givenAt, onValidate, isToday }) {
                         className="shrink-0 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors"
                     >
                         Validate
+                    </motion.button>
+                ) : (
+                    <motion.button
+                        onClick={onUnvalidate}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        className="shrink-0 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-500 hover:border-amber-400 hover:text-amber-600 transition-colors"
+                    >
+                        Unvalidate
                     </motion.button>
                 )}
             </div>

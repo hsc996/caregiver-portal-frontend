@@ -5,6 +5,7 @@ import ShiftCard from "./ShiftCard";
 import MedicationItem from "./MedicationItem";
 import ADLItem from "./ADLItem";
 import MedicationValidationModal from "./MedicationValidationModal";
+import MedicationUnvalidationModal from "./MedicationUnvalidationModal";
 import { AccordionSection } from "../ui/Accordion";
 import { patientAPI } from "../../api/patient";
 import { useNotificationService } from "../Notifications/notificationService";
@@ -43,6 +44,7 @@ function DailySidebar({
   currentUser,
   medicationRecords,
   onMedicationValidated,
+  onMedicationUnvalidated,
 }) {
   const { sendErrorNotification } = useNotificationService();
 
@@ -52,6 +54,7 @@ function DailySidebar({
   const [handoverOpen, setHandoverOpen] = useState(() => handoverNotes.length > 0);
 
   const [validatingMed, setValidatingMed] = useState(null);
+  const [unvalidatingMed, setUnvalidatingMed] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -89,6 +92,22 @@ function DailySidebar({
       setValidatingMed(null);
     } catch {
       sendErrorNotification('Failed to record medication. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function handleConfirmUnvalidation(reason) {
+    if (!unvalidatingMed || !patientId) return;
+    const recordId = medicationRecords[unvalidatingMed.id]?.recordId;
+    if (!recordId) return;
+    setIsSaving(true);
+    try {
+      await patientAPI.unvalidateMedicationAdministration(patientId, recordId, reason);
+      onMedicationUnvalidated(unvalidatingMed.id);
+      setUnvalidatingMed(null);
+    } catch {
+      sendErrorNotification('Failed to unvalidate medication. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -146,6 +165,7 @@ function DailySidebar({
                     givenBy={medicationRecords[med.id]?.givenBy ?? null}
                     givenAt={medicationRecords[med.id]?.givenAt ?? null}
                     onValidate={() => setValidatingMed(med)}
+                    onUnvalidate={() => setUnvalidatingMed(med)}
                     isToday={isToday}
                   />
                 ))}
@@ -214,6 +234,13 @@ function DailySidebar({
         medication={validatingMed}
         onConfirm={handleConfirmValidation}
         onCancel={() => setValidatingMed(null)}
+        isSaving={isSaving}
+      />
+
+      <MedicationUnvalidationModal
+        medication={unvalidatingMed}
+        onConfirm={handleConfirmUnvalidation}
+        onCancel={() => setUnvalidatingMed(null)}
         isSaving={isSaving}
       />
     </>

@@ -24,6 +24,9 @@ export const patientAPI = {
     recordMedicationAdministration: (patientId, data) =>
         api.post(`/patient/${patientId}/medication-administrations`, data),
 
+    unvalidateMedicationAdministration: (patientId, recordId, reason) =>
+        api.patch(`/patient/${patientId}/medication-administrations/${recordId}/unvalidate`, { reason }),
+
     uploadImage: (id, file, onProgress) => {
         const formData = new FormData();
         formData.append('profileImg', file);
