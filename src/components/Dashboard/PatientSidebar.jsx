@@ -150,6 +150,7 @@ function PatientSidebar({ onSelect }) {
                     label="Users"
                     open={usersOpen}
                     onToggle={() => setUsersOpen((o) => !o)}
+                    subtle
                 >
                     {usersLoading ? (
                         <div className="space-y-1 px-1 pb-2">
@@ -197,6 +198,7 @@ function PatientSidebar({ onSelect }) {
                     label="Settings"
                     open={settingsOpen}
                     onToggle={() => setSettingsOpen((o) => !o)}
+                    subtle
                 >
                     <p className="px-2 py-3 text-xs text-gray-400">No settings available yet.</p>
                 </AccordionSection>
