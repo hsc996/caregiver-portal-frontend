@@ -78,7 +78,7 @@ function DailySidebar({
     if (!validatingMed || !patientId || !currentUser) return;
     setIsSaving(true);
     try {
-      await patientAPI.recordMedicationAdministration(patientId, {
+      const res = await patientAPI.recordMedicationAdministration(patientId, {
         medicationName: validatingMed.name,
         dosage: validatingMed.dosage,
         route: validatingMed.route,
@@ -86,7 +86,7 @@ function DailySidebar({
       });
 
       const givenBy = `${currentUser.firstName} ${currentUser.lastName}`.trim();
-      const record = { givenBy, givenAt: new Date() };
+      const record = { recordId: res.data.data._id, givenBy, givenAt: new Date() };
 
       onMedicationValidated(validatingMed.id, record);
       setValidatingMed(null);
@@ -100,7 +100,10 @@ function DailySidebar({
   async function handleConfirmUnvalidation(reason) {
     if (!unvalidatingMed || !patientId) return;
     const recordId = medicationRecords[unvalidatingMed.id]?.recordId;
-    if (!recordId) return;
+    if (!recordId) {
+      sendErrorNotification('Could not find the administration record. Try refreshing the page.');
+      return;
+    }
     setIsSaving(true);
     try {
       await patientAPI.unvalidateMedicationAdministration(patientId, recordId, reason);

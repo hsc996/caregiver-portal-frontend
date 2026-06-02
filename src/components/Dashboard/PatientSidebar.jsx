@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { UserRound } from 'lucide-react';
+import { UserRound, Users, Settings } from 'lucide-react';
 import { motion } from 'motion/react';
-import { patientAPI } from '../../api/patient';
+import { patientAPI, userAPI } from '../../api/patient';
 import MagneticButton from '../MagneticButton';
+import { AccordionSection } from '../ui/Accordion';
 
 function Initials({ firstName, lastName }) {
     const letters = `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.toUpperCase();
@@ -14,17 +15,17 @@ function Initials({ firstName, lastName }) {
 }
 
 function PatientSidebar({ onSelect }) {
-    const [patients, setPatients] = useState([]);
+    const [patients, setPatients]     = useState([]);
     const [selectedId, setSelectedId] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [loading, setLoading]       = useState(true);
+    const [error, setError]           = useState(false);
     const [retryCount, setRetryCount] = useState(0);
 
-    const retry = () => {
-        setError(false);
-        setLoading(true);
-        setRetryCount((c) => c + 1);
-    };
+    const [users, setUsers]           = useState([]);
+    const [usersLoading, setUsersLoading] = useState(true);
+    const [usersError, setUsersError] = useState(false);
+    const [usersOpen, setUsersOpen]     = useState(false);
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     useEffect(() => {
         let cancelled = false;
@@ -48,6 +49,23 @@ function PatientSidebar({ onSelect }) {
         return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [retryCount]);
+
+    useEffect(() => {
+        let cancelled = false;
+        async function fetchUsers() {
+            try {
+                const res = await userAPI.getAllUsers();
+                if (cancelled) return;
+                setUsers(res.data.data ?? []);
+            } catch {
+                if (!cancelled) setUsersError(true);
+            } finally {
+                if (!cancelled) setUsersLoading(false);
+            }
+        }
+        fetchUsers();
+        return () => { cancelled = true; };
+    }, []);
 
     function handleSelect(patient) {
         setSelectedId(patient._id);
@@ -76,7 +94,7 @@ function PatientSidebar({ onSelect }) {
                     <div className="flex flex-col items-center gap-3 px-4 py-6 text-center">
                         <p className="text-xs text-gray-400">Failed to load patients</p>
                         <MagneticButton
-                            onClick={retry}
+                            onClick={() => { setError(false); setLoading(true); setRetryCount((c) => c + 1); }}
                             className="rounded-md bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 hover:bg-indigo-100 transition-colors"
                         >
                             Try again
@@ -123,6 +141,65 @@ function PatientSidebar({ onSelect }) {
                         })}
                     </ul>
                 )}
+            </div>
+
+            {/* Users accordion pinned to the bottom */}
+            <div className="border-t border-gray-100 px-3 py-3">
+                <AccordionSection
+                    icon={Users}
+                    label="Users"
+                    open={usersOpen}
+                    onToggle={() => setUsersOpen((o) => !o)}
+                >
+                    {usersLoading ? (
+                        <div className="space-y-1 px-1 pb-2">
+                            {[...Array(3)].map((_, i) => (
+                                <div key={i} className="flex items-center gap-3 rounded-lg px-2 py-2">
+                                    <div className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-100 animate-pulse" />
+                                    <div className="h-3 w-24 rounded bg-gray-100 animate-pulse" />
+                                </div>
+                            ))}
+                        </div>
+                    ) : usersError ? (
+                        <p className="px-2 py-3 text-center text-xs text-gray-400">Failed to load users</p>
+                    ) : users.length === 0 ? (
+                        <p className="px-2 py-3 text-center text-xs text-gray-400">No users found</p>
+                    ) : (
+                        <ul className="space-y-0.5 px-1 pb-1">
+                            {users.map((user) => {
+                                const fullName = `${user.firstName} ${user.lastName}`;
+                                return (
+                                    <li key={user._id} className="flex items-center gap-3 rounded-lg px-2 py-2">
+                                        {user.profileImg ? (
+                                            <img
+                                                src={user.profileImg}
+                                                alt={fullName}
+                                                className="h-8 w-8 flex-shrink-0 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <Initials firstName={user.firstName} lastName={user.lastName} />
+                                        )}
+                                        <div className="min-w-0">
+                                            <p className="truncate text-sm font-medium text-gray-800">{fullName}</p>
+                                            <p className="truncate text-xs text-gray-400">{user.role ?? ''}</p>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    )}
+                </AccordionSection>
+
+                <div className="border-t border-gray-100 my-1" />
+
+                <AccordionSection
+                    icon={Settings}
+                    label="Settings"
+                    open={settingsOpen}
+                    onToggle={() => setSettingsOpen((o) => !o)}
+                >
+                    <p className="px-2 py-3 text-xs text-gray-400">No settings available yet.</p>
+                </AccordionSection>
             </div>
         </aside>
     );

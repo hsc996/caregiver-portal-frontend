@@ -1,5 +1,10 @@
 import api from './axiosInstance';
 
+export const userAPI = {
+    getAllUsers: () =>
+        api.get('/user/fetchallusers'),
+};
+
 export const patientAPI = {
     getAllPatients: () =>
         api.get('/patient'),
