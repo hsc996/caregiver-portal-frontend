@@ -88,8 +88,8 @@ function HandoverNoteDetail({ note, onBack }) {
 
             <div className="flex-1 overflow-y-auto space-y-5">
                 <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-indigo-50 p-2.5 shrink-0">
-                        <FileText className="h-5 w-5 text-indigo-600" />
+                    <div className="rounded-lg bg-brand-50 p-2.5 shrink-0">
+                        <FileText className="h-5 w-5 text-brand-600" />
                     </div>
                     <div>
                         <h2 className="text-lg font-semibold text-gray-900">{note.title}</h2>
@@ -108,7 +108,7 @@ function HandoverNoteDetail({ note, onBack }) {
                         {note.tags.map((tag) => (
                             <span
                                 key={tag}
-                                className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700"
+                                className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700"
                             >
                                 <Tag className="h-3 w-3" />
                                 {tag}
@@ -292,8 +292,8 @@ function PatientDashboard() {
                 <main className="flex flex-1 flex-col min-w-0">
                     {headerPatient && <PatientHeader patient={headerPatient} rawPatient={selectedPatient} />}
 
-                    <div className="flex flex-1 gap-6 bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-                        <div className="flex-1 min-w-0 rounded-xl bg-white p-6 shadow-sm">
+                    <div className="flex flex-1 gap-6 bg-gradient-to-br from-blue-50 to-brand-100 p-5">
+                        <div className="flex-1 min-w-0 rounded-xl bg-white p-5 shadow-sm">
                             {selectedNote ? (
                                 <HandoverNoteDetail
                                     note={selectedNote}

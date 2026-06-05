@@ -6,7 +6,7 @@ function ADLItem({ adl, isCompleted, onToggle }) {
       className={`rounded-lg border p-3 transition ${
         isCompleted
           ? "border-green-200 bg-green-50"
-          : "border-gray-200 hover:border-indigo-200"
+          : "border-gray-200 hover:border-brand-200"
       }`}
     >
       <div className="flex items-start space-x-3">
@@ -15,7 +15,7 @@ function ADLItem({ adl, isCompleted, onToggle }) {
           className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 transition ${
             isCompleted
               ? "border-green-500 bg-green-500"
-              : "border-gray-300 hover:border-indigo-400"
+              : "border-gray-300 hover:border-brand-400"
           }`}
         >
           {isCompleted && <Check className="h-3 w-3 text-white" />}

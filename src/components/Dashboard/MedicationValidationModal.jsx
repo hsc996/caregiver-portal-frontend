@@ -30,8 +30,8 @@ function MedicationValidationModal({ medication, onConfirm, onCancel, isSaving }
                             {/* Header */}
                             <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="rounded-lg bg-indigo-50 p-1.5">
-                                        <Pill className="h-4 w-4 text-indigo-600" />
+                                    <div className="rounded-lg bg-brand-50 p-1.5">
+                                        <Pill className="h-4 w-4 text-brand-600" />
                                     </div>
                                     <h2 className="text-sm font-semibold text-gray-900">Confirm medication given</h2>
                                 </div>
@@ -93,7 +93,7 @@ function MedicationValidationModal({ medication, onConfirm, onCancel, isSaving }
                                     disabled={isSaving}
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="flex-1 rounded-lg bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+                                    className="flex-1 rounded-lg bg-brand-600 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 disabled:pointer-events-none transition-colors"
                                 >
                                     {isSaving ? 'Saving…' : 'Validate'}
                                 </motion.button>

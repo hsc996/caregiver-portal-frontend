@@ -1,4 +1,15 @@
+import { motion } from 'motion/react';
 import MagneticButton from '../MagneticButton';
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 100, damping: 22 } },
+};
+
+const headingItem = {
+  hidden: { y: -40, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 100, damping: 22 } },
+};
 
 function HeroSection() {
   return (
@@ -15,35 +26,37 @@ function HeroSection() {
         ></div>
       </div>
       <div className="mx-auto max-w-2xl py-16 sm:py-28 lg:py-36">
-        {/* <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-          <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
-            Announcing our next round of funding.{" "}
-            <a href="#" className="font-semibold text-indigo-400">
-              <span aria-hidden="true" className="absolute inset-0"></span>Read more{" "}
-              <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-        </div> */}
-        <div className="text-center">
-          <h1 className="text-5xl font-semibold tracking-tight text-balance text-indigo-400 sm:text-7xl">
+        <motion.div
+          className="text-center"
+          initial="hidden"
+          animate="show"
+          variants={{ show: { transition: { staggerChildren: 0.12 } } }}
+        >
+          <motion.h1
+            variants={headingItem}
+            className="text-5xl font-semibold tracking-tight text-balance text-brand-400 sm:text-7xl"
+          >
             Streamline care, maximize time
-          </h1>
-          <p className="mt-8 text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">
+          </motion.h1>
+          <motion.p
+            variants={item}
+            className="mt-8 text-lg font-medium text-pretty text-gray-400 sm:text-xl/8"
+          >
             The all-in-one platform that helps caregivers organise schedules, track medications, and stay connected with their patients.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
+          </motion.p>
+          <motion.div variants={item} className="mt-10 flex items-center justify-center gap-x-6">
             <MagneticButton
               as="link"
               to="/signup"
-              className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="rounded-md bg-brand-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               Get started
             </MagneticButton>
-            <a href="#" className="text-sm leading-6 font-semibold text-indigo-500">
+            <a href="#" className="text-sm leading-6 font-semibold text-brand-500">
               Learn more <span aria-hidden="true">→</span>
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
       <div
         aria-hidden="true"

@@ -224,7 +224,7 @@ function PatientProfile() {
                                 <img
                                     src={displayImg}
                                     alt={patient ? `${patient.firstName} ${patient.lastName}` : 'Patient'}
-                                    className="h-28 w-28 rounded-full border-4 border-indigo-100 object-cover"
+                                    className="h-28 w-28 rounded-full border-4 border-brand-100 object-cover"
                                 />
                             </div>
                             <div>
@@ -370,7 +370,7 @@ function PatientProfile() {
                         <MagneticButton
                             type="submit"
                             disabled={formSaving}
-                            className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+                            className="inline-flex items-center justify-center rounded-md bg-brand-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-700 disabled:opacity-50 disabled:pointer-events-none transition-colors"
                         >
                             {formSaving ? 'Saving...' : 'Save Changes'}
                         </MagneticButton>
@@ -397,7 +397,7 @@ function PatientProfile() {
                             <img
                                 src={previewUrl || displayImg}
                                 alt="Preview"
-                                className="h-32 w-32 rounded-full border-4 border-indigo-100 object-cover"
+                                className="h-32 w-32 rounded-full border-4 border-brand-100 object-cover"
                             />
                         </div>
 
@@ -437,7 +437,7 @@ function PatientProfile() {
                                 </div>
                                 <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
                                     <div
-                                        className={`h-full rounded-full transition-all duration-300 ${uploadComplete ? 'bg-green-500' : 'bg-indigo-500'}`}
+                                        className={`h-full rounded-full transition-all duration-300 ${uploadComplete ? 'bg-green-500' : 'bg-brand-500'}`}
                                         style={{ width: `${uploadProgress}%` }}
                                     />
                                 </div>
@@ -455,7 +455,7 @@ function PatientProfile() {
                             <MagneticButton
                                 onClick={handleSaveImage}
                                 disabled={!uploadComplete}
-                                className="flex-1 rounded-md bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                                className="flex-1 rounded-md bg-brand-600 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-40 disabled:pointer-events-none transition-colors"
                             >
                                 Save
                             </MagneticButton>

@@ -22,7 +22,7 @@ function HandoverNoteItem({ note, onClick }) {
       onClick={() => onClick(note)}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-left transition hover:border-indigo-300 hover:bg-indigo-50"
+      className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-left transition hover:border-brand-300 hover:bg-brand-50"
     >
       <p className="text-sm font-medium text-gray-900 truncate">{note.caregiver}</p>
       <p className="mt-0.5 text-xs text-gray-500">{time}</p>
@@ -187,7 +187,7 @@ function DailySidebar({
             open={adlsOpen}
             onToggle={() => setAdlsOpen((o) => !o)}
             action={
-              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="text-indigo-600 hover:text-indigo-700">
+              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="text-brand-600 hover:text-brand-700">
                 <Plus className="h-5 w-5" />
               </motion.button>
             }

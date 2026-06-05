@@ -40,7 +40,7 @@ function MedicationItem({ medication, givenBy, givenAt, onValidate, onUnvalidate
         ? "border-green-400 bg-green-50 shadow-sm shadow-green-200"
         : status === "overdue"
         ? "border-red-400 bg-red-50 shadow-sm shadow-red-200"
-        : "border-gray-200 hover:border-indigo-200";
+        : "border-gray-200 hover:border-brand-200";
 
     const givenAtFormatted = givenAt
         ? new Date(givenAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
@@ -88,7 +88,7 @@ function MedicationItem({ medication, givenBy, givenAt, onValidate, onUnvalidate
                         onClick={onValidate}
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
-                        className="shrink-0 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors"
+                        className="shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700 transition-colors"
                     >
                         Validate
                     </motion.button>

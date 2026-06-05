@@ -7,11 +7,6 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        brand: {
-          100: '#ededfb',
-        },
-      },
       fontFamily: {
         geist: ['Geist', 'sans-serif'],
       },

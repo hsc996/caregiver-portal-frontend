@@ -24,7 +24,7 @@ function PatientHeader({ patient, rawPatient }) {
             <img
               src={patient.profileImg || fallbackProfileImg}
               alt={patient.name}
-              className="h-16 w-16 rounded-full border-2 border-indigo-100 object-cover transition-opacity group-hover:opacity-80 cursor-pointer"
+              className="h-16 w-16 rounded-full border-2 border-brand-100 object-cover transition-opacity group-hover:opacity-80 cursor-pointer"
             />
             <span className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
               <span className="rounded-full bg-black/40 px-1.5 py-0.5 text-xs text-white">Edit</span>

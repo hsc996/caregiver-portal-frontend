@@ -8,8 +8,8 @@ import { AccordionSection } from '../ui/Accordion';
 function Initials({ firstName, lastName }) {
     const letters = `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.toUpperCase();
     return (
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
-            {letters || <UserRound className="h-4 w-4 text-indigo-400" />}
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-600">
+            {letters || <UserRound className="h-4 w-4 text-brand-400" />}
         </div>
     );
 }
@@ -73,7 +73,12 @@ function PatientSidebar({ onSelect }) {
     }
 
     return (
-        <aside className="flex w-56 flex-shrink-0 flex-col border-r border-gray-200 bg-white">
+        <motion.aside
+            initial={{ x: -224, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 100, damping: 22 }}
+            className="flex w-56 flex-shrink-0 flex-col border-r border-gray-200 bg-white"
+        >
             <div className="px-4 py-5 border-b border-gray-100">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
                     Patients
@@ -95,7 +100,7 @@ function PatientSidebar({ onSelect }) {
                         <p className="text-xs text-gray-400">Failed to load patients</p>
                         <MagneticButton
                             onClick={() => { setError(false); setLoading(true); setRetryCount((c) => c + 1); }}
-                            className="rounded-md bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 hover:bg-indigo-100 transition-colors"
+                            className="rounded-md bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-100 transition-colors"
                         >
                             Try again
                         </MagneticButton>
@@ -115,7 +120,7 @@ function PatientSidebar({ onSelect }) {
                                     {active && (
                                         <motion.div
                                             layoutId="sidebar-highlight"
-                                            className="absolute inset-x-0 inset-y-0.5 rounded-full bg-indigo-50"
+                                            className="absolute inset-x-0 inset-y-0.5 rounded-full bg-brand-50"
                                             transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                                         />
                                     )}
@@ -132,7 +137,7 @@ function PatientSidebar({ onSelect }) {
                                         ) : (
                                             <Initials firstName={patient.firstName} lastName={patient.lastName} />
                                         )}
-                                        <span className={`truncate text-sm font-medium ${active ? 'text-indigo-700' : 'text-gray-800'}`}>
+                                        <span className={`truncate text-sm font-medium ${active ? 'text-brand-700' : 'text-gray-800'}`}>
                                             {fullName}
                                         </span>
                                     </button>
@@ -203,7 +208,7 @@ function PatientSidebar({ onSelect }) {
                     <p className="px-2 py-3 text-xs text-gray-400">No settings available yet.</p>
                 </AccordionSection>
             </div>
-        </aside>
+        </motion.aside>
     );
 }
 

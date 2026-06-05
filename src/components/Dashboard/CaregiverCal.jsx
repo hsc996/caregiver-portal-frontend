@@ -15,12 +15,12 @@ function CalendarGrid({ currentDate, hasShifts, onDateClick, isToday }) {
   const { daysInMonth, startingDayOfWeek } = getDaysInMonth(currentDate);
 
   return (
-    <div className="grid grid-cols-7 gap-2">
+    <div className="grid grid-cols-7 gap-1.5">
       {/* Day Headers */}
       {["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"].map((day) => (
         <div
           key={day}
-          className="py-2 text-center text-sm font-medium text-gray-500"
+          className="py-1 text-center text-xs font-medium text-gray-500"
         >
           {day}
         </div>
@@ -41,11 +41,11 @@ function CalendarGrid({ currentDate, hasShifts, onDateClick, isToday }) {
             onClick={() => onDateClick(day)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.94 }}
-            className={`aspect-square rounded-lg p-2 text-sm transition-all hover:shadow-md ${
+            className={`aspect-square rounded-lg p-1 text-xs transition-all hover:shadow-md ${
               isToday(day)
-                ? "bg-indigo-300 font-bold text-white"
+                ? "bg-brand-300 font-bold text-white"
                 : shifts.length > 0
-                  ? "bg-indigo-100 font-medium text-indigo-900 hover:bg-indigo-200"
+                  ? "bg-brand-100 font-medium text-brand-900 hover:bg-brand-200"
                   : "bg-gray-50 text-gray-700 hover:bg-gray-100"
             }`}
           >
@@ -53,7 +53,7 @@ function CalendarGrid({ currentDate, hasShifts, onDateClick, isToday }) {
               <span>{day}</span>
               {shifts.length > 0 && (
                 <div className="mt-1 flex space-x-1">
-                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brand-400" />
                 </div>
               )}
             </div>
