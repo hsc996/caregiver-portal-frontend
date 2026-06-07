@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import MainNav from '../components/LandingPage/MainNav';
 import CalendarGrid from '../components/Dashboard/CaregiverCal';
@@ -138,27 +138,39 @@ function PatientDashboard() {
     const [selectedNote, setSelectedNote]         = useState(null);
     const [medicationRecords, setMedicationRecords] = useState({});
 
+    // Shared promise ref: ensures only one HTTP request is made per patient+month
+    // even when StrictMode or rapid re-renders cause the effect to fire multiple times.
+    const shiftsFetchRef = useRef(null); // { key: string, promise: Promise }
+
     // Fetch shifts per month
     useEffect(() => {
         if (!selectedPatient?._id) return;
 
+        const key = `${selectedPatient._id}|${currentDate.getFullYear()}-${currentDate.getMonth()}`;
         let cancelled = false;
-        async function fetchShifts() {
+
+        if (!shiftsFetchRef.current || shiftsFetchRef.current.key !== key) {
             setShiftsLoading(true);
-            try {
-                const res = await patientAPI.getPatientShifts(
+            shiftsFetchRef.current = {
+                key,
+                promise: patientAPI.getPatientShifts(
                     selectedPatient._id,
                     currentDate.getFullYear(),
                     currentDate.getMonth() + 1,
-                );
-                if (!cancelled) setShifts(res.data.data ?? {});
-            } catch {
-                if (!cancelled) sendErrorNotification('Failed to load shifts.');
-            } finally {
-                if (!cancelled) setShiftsLoading(false);
-            }
+                ),
+            };
         }
-        fetchShifts();
+
+        shiftsFetchRef.current.promise
+            .then((res) => { if (!cancelled) setShifts(res.data.data ?? {}); })
+            .catch(() => {
+                if (!cancelled) {
+                    sendErrorNotification('Failed to load shifts.');
+                    shiftsFetchRef.current = null;
+                }
+            })
+            .finally(() => { if (!cancelled) setShiftsLoading(false); });
+
         return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedPatient?._id, currentDate.getFullYear(), currentDate.getMonth()]);

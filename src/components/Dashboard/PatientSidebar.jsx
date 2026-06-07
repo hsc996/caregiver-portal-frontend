@@ -29,6 +29,7 @@ function PatientSidebar({ onSelect }) {
 
     useEffect(() => {
         let cancelled = false;
+
         async function fetchPatients() {
             try {
                 const res = await patientAPI.getAllPatients();
@@ -45,6 +46,7 @@ function PatientSidebar({ onSelect }) {
                 if (!cancelled) setLoading(false);
             }
         }
+        
         fetchPatients();
         return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

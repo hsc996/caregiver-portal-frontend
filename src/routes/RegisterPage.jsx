@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import MagneticButton from '../components/MagneticButton';
 import { authAPI } from '../api/auth';
 import { useNotificationService } from '../components/Notifications/notificationService';
@@ -12,6 +12,7 @@ function RegisterPage() {
     const { sendErrorNotification } = useNotificationService();
 
     const [loading, setLoading] = useState(false);
+    const [mode, setMode] = useState('create'); // 'create' | 'join'
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -19,10 +20,12 @@ function RegisterPage() {
         email: '',
         password: '',
         confirmPassword: '',
+        companyName: '',
+        inviteCode: '',
     });
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
+        setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }));
     };
 
     const handleSubmit = async (e) => {
@@ -30,6 +33,15 @@ function RegisterPage() {
 
         if (formData.password !== formData.confirmPassword) {
             sendErrorNotification('Passwords do not match.');
+            return;
+        }
+
+        if (mode === 'create' && !formData.companyName.trim()) {
+            sendErrorNotification('Please enter a company name.');
+            return;
+        }
+        if (mode === 'join' && !formData.inviteCode.trim()) {
+            sendErrorNotification('Please enter an invite code.');
             return;
         }
 
@@ -41,6 +53,9 @@ function RegisterPage() {
                 formData.username,
                 formData.email,
                 formData.password,
+                mode === 'create'
+                    ? { companyName: formData.companyName.trim() }
+                    : { inviteCode: formData.inviteCode.trim() },
             );
             navigate('/dashboard');
         } catch (error) {
@@ -83,6 +98,24 @@ function RegisterPage() {
                 <div className="mb-7 text-center">
                     <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Create an account</h1>
                     <p className="mt-1 text-sm text-zinc-500">Get started with CareSync today</p>
+                </div>
+
+                {/* Mode toggle */}
+                <div className="mb-5 flex rounded-lg bg-zinc-100 p-1 text-sm font-medium">
+                    <button
+                        type="button"
+                        onClick={() => setMode('create')}
+                        className={`flex-1 rounded-md py-1.5 transition-colors ${mode === 'create' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                    >
+                        Create company
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setMode('join')}
+                        className={`flex-1 rounded-md py-1.5 transition-colors ${mode === 'join' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                    >
+                        Join with invite code
+                    </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -164,6 +197,53 @@ function RegisterPage() {
                             className={inputClass}
                         />
                     </div>
+
+                    {/* Company name or invite code */}
+                    <AnimatePresence mode="wait">
+                        {mode === 'create' ? (
+                            <motion.div
+                                key="companyName"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.18 }}
+                                className="space-y-1.5 overflow-hidden"
+                            >
+                                <label htmlFor="companyName" className="text-sm font-medium text-zinc-700">Company name</label>
+                                <input
+                                    type="text"
+                                    id="companyName"
+                                    value={formData.companyName}
+                                    onChange={handleChange}
+                                    required={mode === 'create'}
+                                    placeholder="e.g. Sunrise Care"
+                                    className={inputClass}
+                                />
+                                <p className="text-xs text-zinc-400">You'll be the Admin and can invite others with a generated code.</p>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="inviteCode"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.18 }}
+                                className="space-y-1.5 overflow-hidden"
+                            >
+                                <label htmlFor="inviteCode" className="text-sm font-medium text-zinc-700">Invite code</label>
+                                <input
+                                    type="text"
+                                    id="inviteCode"
+                                    value={formData.inviteCode}
+                                    onChange={handleChange}
+                                    required={mode === 'join'}
+                                    placeholder="Enter your invite code"
+                                    className={inputClass}
+                                />
+                                <p className="text-xs text-zinc-400">Ask your company Admin for the invite code.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     <MagneticButton
                         type="submit"
