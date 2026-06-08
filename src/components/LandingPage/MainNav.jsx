@@ -11,7 +11,7 @@ const navItem = {
 };
 
 function MainNav() {
-  const { userJwt, setUserJwt, currentUser } = useUserAuthContext();
+  const { userJwt, setUserJwt } = useUserAuthContext();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -39,11 +39,6 @@ function MainNav() {
             <motion.div variants={navItem} className="flex h-full items-center gap-3">
               {userJwt ? (
                 <>
-                  {currentUser?.role === 'Admin' && (
-                    <MagneticButton as="link" to="/signup" className="rounded-full bg-brand-600 hover:bg-brand-700 text-white px-6 py-2 text-sm font-medium transition-colors">
-                      Create User
-                    </MagneticButton>
-                  )}
                   <MagneticButton
                     onClick={handleLogout}
                     className="rounded-full bg-brand-100 hover:bg-brand-200 text-brand-700 px-6 py-2 text-sm font-medium transition-colors"

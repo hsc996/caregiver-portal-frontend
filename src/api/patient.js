@@ -3,6 +3,9 @@ import api from './axiosInstance';
 export const userAPI = {
     getAllUsers: () =>
         api.get('/user/fetchallusers'),
+
+    sendInvite: (data) =>
+        api.post('/user/invite', data),
 };
 
 export const patientAPI = {

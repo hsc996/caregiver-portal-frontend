@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import MagneticButton from '../components/MagneticButton';
 import { authAPI } from '../api/auth';
@@ -12,17 +12,22 @@ function RegisterPage() {
     const { setUserJwt } = useUserAuthContext();
     const navigate = useNavigate();
     const { sendErrorNotification } = useNotificationService();
+    const [searchParams] = useSearchParams();
+
+    const inviteParam = searchParams.get('invite') ?? '';
+    const emailParam  = searchParams.get('email')  ?? '';
+    const fromInvite  = !!inviteParam;
 
     const [loading, setLoading] = useState(false);
-    const [mode, setMode] = useState('create'); // 'create' | 'join'
+    const [mode, setMode] = useState(fromInvite ? 'join' : 'create');
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        email: '',
+        email: emailParam,
         password: '',
         confirmPassword: '',
         companyName: '',
-        inviteCode: '',
+        inviteCode: inviteParam,
     });
 
     const handleChange = (e) => {
@@ -98,27 +103,33 @@ function RegisterPage() {
                 className="relative w-full max-w-md rounded-2xl border border-brand-200/50 bg-brand-50/40 px-8 py-10 shadow-xl shadow-black/[0.06] backdrop-blur-2xl"
             >
                 <div className="mb-7 text-center">
-                    <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Create an account</h1>
-                    <p className="mt-1 text-sm text-zinc-500">Get started with CareSync today</p>
+                    <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+                        {fromInvite ? 'Join with invite code' : 'Create an account'}
+                    </h1>
+                    <p className="mt-1 text-sm text-zinc-500">
+                        {fromInvite ? 'Complete your details to finish setting up your account.' : 'Get started with CareSync today'}
+                    </p>
                 </div>
 
-                {/* Mode toggle */}
-                <div className="mb-5 flex rounded-lg bg-zinc-100 p-1 text-sm font-medium">
-                    <button
-                        type="button"
-                        onClick={() => setMode('create')}
-                        className={`flex-1 rounded-md py-1.5 transition-colors ${mode === 'create' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
-                    >
-                        Create company
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setMode('join')}
-                        className={`flex-1 rounded-md py-1.5 transition-colors ${mode === 'join' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
-                    >
-                        Join with invite code
-                    </button>
-                </div>
+                {/* Mode toggle — hidden when arriving from an invite link */}
+                {!fromInvite && (
+                    <div className="mb-5 flex rounded-lg bg-zinc-100 p-1 text-sm font-medium">
+                        <button
+                            type="button"
+                            onClick={() => setMode('create')}
+                            className={`flex-1 rounded-md py-1.5 transition-colors ${mode === 'create' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                        >
+                            Create company
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setMode('join')}
+                            className={`flex-1 rounded-md py-1.5 transition-colors ${mode === 'join' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+                        >
+                            Join with invite code
+                        </button>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-2 gap-3">
@@ -156,8 +167,9 @@ function RegisterPage() {
                             value={formData.email}
                             onChange={handleChange}
                             required
+                            readOnly={fromInvite}
                             placeholder="Enter email address"
-                            className={inputClass}
+                            className={`${inputClass} ${fromInvite ? 'cursor-not-allowed bg-zinc-100 text-zinc-500' : ''}`}
                         />
                     </div>
 
