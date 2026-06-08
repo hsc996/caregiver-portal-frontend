@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import MagneticButton from '../components/MagneticButton';
 import { authAPI } from '../api/auth';
+import { useUserAuthContext } from '../contexts/AuthContext/AuthContext';
 import { useNotificationService } from '../components/Notifications/notificationService';
 
 const inputClass = "flex h-10 w-full rounded-lg border border-zinc-200 bg-white/80 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all hover:border-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:border-brand-300";
 
 function RegisterPage() {
+    const { setUserJwt } = useUserAuthContext();
     const navigate = useNavigate();
     const { sendErrorNotification } = useNotificationService();
 
@@ -47,7 +49,7 @@ function RegisterPage() {
 
         setLoading(true);
         try {
-            await authAPI.signup(
+            const result = await authAPI.signup(
                 formData.firstName,
                 formData.lastName,
                 formData.username,
@@ -57,6 +59,8 @@ function RegisterPage() {
                     ? { companyName: formData.companyName.trim() }
                     : { inviteCode: formData.inviteCode.trim() },
             );
+            setUserJwt(result.token);
+            localStorage.setItem('refreshToken', result.refreshToken);
             navigate('/dashboard');
         } catch (error) {
             sendErrorNotification(error.response?.data?.message || 'Failed to create account.');

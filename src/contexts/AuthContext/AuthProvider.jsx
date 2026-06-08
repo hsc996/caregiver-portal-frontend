@@ -52,6 +52,7 @@ export function UserAuthContextProvider({ children }){
             role: payload.role,
             firstName: payload.firstName ?? '',
             lastName: payload.lastName ?? '',
+            companyId: payload.companyId ?? null,
         };
     }, [userJwt]);
 

@@ -27,7 +27,7 @@ src/
 ├── contexts/
 │   ├── AuthContext/
 │   │   ├── AuthContext.jsx         # Auth context definition
-│   │   └── AuthProvider.jsx.jsx    # Provides userJwt, currentUser, setUserJwt
+│   │   └── AuthProvider.jsx    # Provides userJwt, currentUser, setUserJwt
 │   └── NotificationContext/
 │       ├── NotificationContext.jsx
 │       └── NotificationProvider.jsx
