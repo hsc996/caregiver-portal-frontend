@@ -18,7 +18,6 @@ function RegisterPage() {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -52,7 +51,6 @@ function RegisterPage() {
             const result = await authAPI.signup(
                 formData.firstName,
                 formData.lastName,
-                formData.username,
                 formData.email,
                 formData.password,
                 mode === 'create'
@@ -148,19 +146,6 @@ function RegisterPage() {
                                 className={inputClass}
                             />
                         </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <label htmlFor="username" className="text-sm font-medium text-zinc-700">Username</label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            required
-                            placeholder="Enter username"
-                            className={inputClass}
-                        />
                     </div>
 
                     <div className="space-y-1.5">

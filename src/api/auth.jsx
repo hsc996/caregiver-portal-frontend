@@ -1,9 +1,9 @@
 import api from './axiosInstance';
 
 export const authAPI = {
-    signup: async (firstName, lastName, username, email, password, { companyName, inviteCode } = {}) => {
+    signup: async (firstName, lastName, email, password, { companyName, inviteCode } = {}) => {
         const response = await api.post('/auth/signup', {
-            firstName, lastName, username, email, password,
+            firstName, lastName, email, password,
             ...(companyName ? { companyName } : {}),
             ...(inviteCode  ? { inviteCode  } : {}),
         });
