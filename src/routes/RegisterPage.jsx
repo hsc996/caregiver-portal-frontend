@@ -167,9 +167,9 @@ function RegisterPage() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            readOnly={fromInvite}
+                            readOnly={!!emailParam}
                             placeholder="Enter email address"
-                            className={`${inputClass} ${fromInvite ? 'cursor-not-allowed bg-zinc-100 text-zinc-500' : ''}`}
+                            className={`${inputClass} ${emailParam ? 'cursor-not-allowed bg-zinc-100 text-zinc-500' : ''}`}
                         />
                     </div>
 
